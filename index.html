@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Dossier secret · 1789</title>
+<style>
+/* =========================================================
+   Grundfarben und Schriften
+   ========================================================= */
+:root{
+  --perg:#f1e4c3; --perg-hell:#f7eed6; --perg-dunkel:#dcc79b;
+  --tinte:#3b2a1a; --tinte-weich:#5a4229;
+  --siegel:#8b1e1e; --siegel-dunkel:#5e1010;
+  --blau:#1f3a6b; --gold:#b08d3c; --gold-hell:#d9bb6e;
+  --holz:#2a1a0f;
+  --f-titel:"Didot","Bodoni 72","Bodoni MT","Baskerville","Book Antiqua",Georgia,serif;
+  --f-text:"Baskerville","Palatino","Palatino Linotype","Book Antiqua",Georgia,serif;
+  --f-hand:"Snell Roundhand","Apple Chancery","Segoe Script","URW Chancery L","Z003",cursive;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0; min-height:100vh; color:var(--tinte);
+  font-family:var(--f-text); font-size:20px; line-height:1.5;
+  background-color:var(--holz);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgba(255,190,110,.10), rgba(0,0,0,0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.09' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.05  0 0 0 0 0.02  0 0 0 1.1 -0.25'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23w)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 2px, rgba(0,0,0,0) 2px 190px, rgba(0,0,0,.25) 190px 193px, rgba(0,0,0,0) 193px 240px),
+    linear-gradient(90deg,#3a2414,#4a2e18 20%,#3b2515 45%,#4d311b 70%,#36210f);
+  background-attachment:fixed;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font-family:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Vignette und Kerzenlicht */
+#vignette{position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%);}
+#candle{position:fixed;inset:0;pointer-events:none;z-index:51;opacity:.9;
+  background:
+    radial-gradient(circle at 96% 98%, rgba(255,170,70,.20), rgba(255,140,40,0) 38%),
+    radial-gradient(circle at 2% 4%, rgba(255,170,70,.10), rgba(255,140,40,0) 30%);
+  mix-blend-mode:screen; animation:flacker 7s infinite;}
+@keyframes flacker{
+  0%{opacity:.85} 7%{opacity:.95} 11%{opacity:.8} 19%{opacity:.92} 26%{opacity:.88}
+  38%{opacity:1} 44%{opacity:.86} 57%{opacity:.94} 63%{opacity:.82} 71%{opacity:.97}
+  84%{opacity:.87} 92%{opacity:.95} 100%{opacity:.85}}
+body.no-flicker #candle{animation:none;opacity:.85}
+@media (prefers-reduced-motion: reduce){ #candle{animation:none} }
+
+/* =========================================================
+   Kopfleiste
+   ========================================================= */
+#topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;
+  padding:8px 16px; padding-top:max(8px, env(safe-area-inset-top));
+  background:linear-gradient(#24160c,#1a0f07); border-bottom:2px solid #6b4f22;
+  box-shadow:0 4px 14px rgba(0,0,0,.6);}
+#topbar.hidden{display:none}
+.watch{display:flex;align-items:center;gap:10px;min-width:150px}
+.watch svg{width:58px;height:66px;flex:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.watch .zeit{font-family:var(--f-titel);font-size:26px;color:#f3e2b5;letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.watch .zeit small{display:block;font-size:12px;letter-spacing:.18em;color:var(--gold-hell);
+  text-transform:uppercase;font-family:var(--f-text);margin-bottom:3px}
+.seals{flex:1;display:flex;justify-content:center;gap:clamp(4px,1.6vw,18px)}
+.hseal{display:flex;flex-direction:column;align-items:center;width:54px}
+.hseal svg{width:46px;height:46px;overflow:visible}
+.hseal .bs{font-family:var(--f-titel);font-size:14px;letter-spacing:.12em;color:var(--gold-hell);
+  min-height:18px;line-height:18px}
+.hseal .half{transition:transform .9s cubic-bezier(.3,1.4,.5,1), opacity .9s}
+.hseal.broken .half.l{transform:translate(-5px,3px) rotate(-16deg);opacity:.75}
+.hseal.broken .half.r{transform:translate(5px,4px) rotate(14deg);opacity:.75}
+.tools{display:flex;gap:8px}
+.ibtn{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#f4dd9a,#c49a45 45%,#7b5a1e 100%);
+  box-shadow:inset 0 0 0 2px rgba(90,60,15,.6), 0 2px 4px rgba(0,0,0,.6);}
+.ibtn svg{width:26px;height:26px}
+.ibtn[aria-pressed="false"]{filter:saturate(.35) brightness(.8)}
+.ibtn:focus-visible,.btn:focus-visible,.slip:focus-visible,.target:focus-visible,.option:focus-visible,.wheel button:focus-visible{outline:3px solid var(--blau);outline-offset:3px}
+
+/* =========================================================
+   Bühne und Pergamentblatt
+   ========================================================= */
+#stage{max-width:1000px;margin:0 auto;padding:26px 16px 80px;perspective:2200px}
+.sheet-wrap{filter:drop-shadow(0 14px 20px rgba(0,0,0,.6)) drop-shadow(0 2px 2px rgba(0,0,0,.45));
+  transform-origin:0 50%;}
+.sheet{position:relative;padding:64px clamp(22px,5.5vw,70px) 70px;
+  clip-path:var(--torn, none);
+  background-color:var(--perg);
+  background-image:
+    radial-gradient(ellipse at 12% 18%, rgba(150,100,40,.16), rgba(150,100,40,0) 22%),
+    radial-gradient(ellipse at 85% 72%, rgba(140,90,35,.14), rgba(140,90,35,0) 18%),
+    radial-gradient(circle at 70% 12%, rgba(120,80,30,.10) 0 3%, rgba(120,80,30,0) 7%),
+    radial-gradient(circle at 22% 88%, rgba(110,70,25,.12), rgba(110,70,25,0) 12%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='4' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 0 0.12  0 0 0 0.9 -0.32'/%3E%3C/filter%3E%3Crect width='700' height='700' filter='url(%23m)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.24  0 0 0 0 0.10  0 0 0 0.55 -0.12'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)'/%3E%3C/svg%3E");
+  box-shadow:inset 0 0 90px rgba(120,75,25,.55), inset 0 0 18px rgba(95,55,18,.55);
+}
+.corner{position:absolute;width:78px;height:78px;pointer-events:none;opacity:.9}
+.corner.tl{left:14px;top:14px}.corner.tr{right:14px;top:14px;transform:scaleX(-1)}
+.corner.bl{left:14px;bottom:14px;transform:scaleY(-1)}.corner.br{right:14px;bottom:14px;transform:scale(-1,-1)}
+
+/* Blättern */
+.turn-out{animation:turnOut .55s ease-in forwards}
+.turn-in{animation:turnIn .6s ease-out}
+@keyframes turnOut{to{transform:rotateY(-95deg) translateX(-30px);opacity:.2}}
+@keyframes turnIn{from{transform:rotateY(70deg);opacity:0} to{transform:none;opacity:1}}
+.unfold{animation:unfold .8s ease-out}
+@keyframes unfold{from{transform:scaleY(.08);opacity:.3} 60%{transform:scaleY(1.02)} to{transform:none;opacity:1}}
+
+/* Typografie */
+.kicker{font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.2em;text-align:center;
+  font-size:19px;color:var(--siegel);margin:0 0 4px}
+h1,h2,h3{font-family:var(--f-titel);font-weight:normal;margin:0}
+h1{font-size:clamp(32px,5vw,46px);text-align:center;font-variant:small-caps;letter-spacing:.06em;line-height:1.15}
+h2{font-size:clamp(25px,3.6vw,31px);font-variant:small-caps;letter-spacing:.06em}
+h3{font-size:23px;font-variant:small-caps;letter-spacing:.08em}
+p{margin:.6em 0}
+.lead::first-letter{float:left;font-family:var(--f-titel);font-size:3.55em;line-height:.82;color:var(--siegel);
+  padding:.1em .12em .02em;margin:.06em .16em 0 0;border:2px solid var(--gold);
+  background:radial-gradient(circle,rgba(176,141,60,.16),rgba(176,141,60,0) 75%), var(--perg-hell);
+  box-shadow:inset 0 0 0 3px var(--perg-hell), inset 0 0 0 4px var(--gold)}
+.hand{font-family:var(--f-hand);font-size:1.25em;line-height:1.45}
+.no-script .hand{font-family:var(--f-text);font-style:italic;font-size:1.1em}
+.small{font-size:17px}
+em.ink{font-style:normal;color:var(--siegel)}
+.divider{display:block;width:min(420px,80%);height:34px;margin:16px auto}
+.center{text-align:center}
+
+/* Titelbilder */
+.plate{margin:18px auto 10px;max-width:820px}
+.plate svg,.plate img{display:block;width:100%;height:auto}
+.plate .frame{padding:10px;background:var(--perg-hell);
+  box-shadow:0 0 0 1px var(--tinte-weich), 0 0 0 5px var(--perg-hell), 0 0 0 6px var(--gold), 0 3px 10px rgba(60,35,10,.35)}
+.plate img{filter:sepia(.55) contrast(1.02) brightness(.97)}
+.plate figcaption{text-align:center;font-style:italic;font-size:17px;margin-top:10px;color:var(--tinte-weich)}
+
+/* =========================================================
+   Knöpfe: Wachssiegel und Messingschild
+   ========================================================= */
+.btn{cursor:pointer;border:none;font-size:20px;min-height:52px;touch-action:manipulation}
+.btn-seal{position:relative;display:inline-grid;place-items:center;min-width:132px;height:132px;padding:0 18px;
+  border-radius:52% 48% 50% 46% / 48% 52% 47% 53%;
+  color:#f6dfb0;font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.08em;font-size:21px;line-height:1.1;
+  background:radial-gradient(circle at 38% 32%,#c0413a 0,#9b2622 30%,var(--siegel) 55%,var(--siegel-dunkel) 100%);
+  box-shadow:inset 0 0 0 7px rgba(0,0,0,.12), inset 0 0 0 9px rgba(255,200,170,.18), inset -4px -6px 12px rgba(0,0,0,.35),
+    0 4px 8px rgba(40,10,5,.55);
+  text-shadow:0 -1px 0 rgba(0,0,0,.45);transition:transform .15s}
+.btn-seal:active{transform:scale(.95)}
+.btn-seal[disabled]{filter:grayscale(.7) brightness(.85);cursor:default}
+.btn-seal.wide{min-width:170px;height:110px;border-radius:44% 46% 42% 48% / 50% 46% 54% 48%}
+.btn-brass{display:inline-flex;align-items:center;gap:10px;padding:10px 22px;border-radius:6px;
+  font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.08em;color:#2c1d0a;
+  background:linear-gradient(170deg,#f1d993,#c9a14a 40%,#a77d2c 70%,#d8b863);
+  box-shadow:inset 0 0 0 2px rgba(110,75,20,.55), inset 0 0 0 4px rgba(255,240,190,.35), 0 3px 5px rgba(40,25,5,.45);
+  text-shadow:0 1px 0 rgba(255,240,200,.6);position:relative}
+.btn-brass::before,.btn-brass::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#fff3c4,#8a6420)}
+.btn-brass::before{left:7px}.btn-brass::after{right:7px}
+.btn-brass:active{transform:translateY(1px)}
+.btn-brass.quiet{font-size:18px;min-height:48px;padding:8px 20px}
+.actions{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:center;margin-top:20px}
+
+/* =========================================================
+   Aufgaben
+   ========================================================= */
+.task{margin:30px 0 8px;padding-top:6px;position:relative}
+.task.locked{opacity:.45;pointer-events:none;filter:blur(.4px)}
+.task .thead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.task .thead .nr{font-family:var(--f-titel);font-size:20px;color:var(--siegel);font-variant:small-caps;letter-spacing:.12em}
+.howto{font-size:17px;color:var(--tinte-weich);border-left:3px solid var(--gold);padding:2px 0 2px 12px;margin:10px 0}
+.done-note{margin:16px 0 0;padding:14px 18px;border:1px solid rgba(59,42,26,.4);
+  background:rgba(247,238,214,.75);box-shadow:inset 0 0 0 4px rgba(176,141,60,.18)}
+.done-note h3{font-size:19px;color:var(--blau);margin-bottom:4px}
+.fb{min-height:1.5em;margin:12px 0 0;text-align:center;font-style:italic}
+.fb.bad{color:var(--siegel)}.fb.good{color:var(--blau)}
+.shake{animation:shake .5s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px) rotate(-.4deg)}40%,60%{transform:translateX(7px) rotate(.4deg)}}
+@media (prefers-reduced-motion: reduce){.shake{animation:none}.turn-out,.turn-in,.unfold,.scroll .sheetin{animation-duration:.01s;animation-delay:0s}}
+
+/* Zettel */
+.pool{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:16px 10px;margin:14px 0;
+  min-height:80px;border-radius:4px;
+  background:linear-gradient(rgba(70,40,15,.08),rgba(70,40,15,.14));box-shadow:inset 0 2px 8px rgba(70,40,15,.25)}
+.pool:empty::after{content:"Alle Zettel sind verteilt.";font-style:italic;color:var(--tinte-weich);align-self:center}
+.slip{cursor:pointer;border:none;text-align:left;font-family:var(--f-text);font-size:19px;line-height:1.3;
+  padding:12px 16px;min-height:52px;max-width:330px;color:var(--tinte);
+  background:linear-gradient(170deg,#fbf3dd,#efe1bb);
+  box-shadow:0 2px 3px rgba(60,35,10,.35), inset 0 0 14px rgba(150,110,50,.25);
+  transform:rotate(var(--r,0deg));transition:transform .15s, box-shadow .15s;touch-action:manipulation}
+.slip:nth-child(3n+1){--r:-1.1deg}.slip:nth-child(3n+2){--r:.9deg}.slip:nth-child(4n+3){--r:-.4deg}
+.slip.sel{transform:translateY(-4px) rotate(0deg) scale(1.04);
+  box-shadow:0 0 0 3px var(--blau), 0 10px 16px rgba(40,20,5,.45)}
+.slip.ok{cursor:default;box-shadow:0 0 0 2px rgba(31,58,107,.55), 0 2px 3px rgba(60,35,10,.3)}
+.slip.ok::after{content:" ✓";color:var(--blau);font-weight:bold}
+.slip.wrong{box-shadow:0 0 0 3px var(--siegel), 0 2px 3px rgba(60,35,10,.3)}
+.targets-active .target{animation:glow 1.6s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 3px rgba(176,141,60,.85), inset 0 0 12px rgba(176,141,60,.4)}}
+@media (prefers-reduced-motion: reduce){.targets-active .target{animation:none;box-shadow:0 0 0 3px rgba(176,141,60,.85)}}
+
+/* Sekretär (Raum 1) */
+.secretary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;border-radius:6px;
+  background:
+    repeating-linear-gradient(92deg,rgba(0,0,0,.12) 0 2px,rgba(0,0,0,0) 2px 26px),
+    linear-gradient(#5b3a1d,#3c2410);
+  box-shadow:inset 0 0 0 3px #2a1809, inset 0 0 0 5px #8c6a2e, 0 6px 14px rgba(30,15,5,.5)}
+.fach{border:none;cursor:pointer;min-height:230px;padding:10px 10px 14px;border-radius:3px;display:flex;flex-direction:column;
+  gap:8px;align-items:stretch;text-align:left;
+  background:linear-gradient(#2a180a,#3b2412 30%,#3b2412);box-shadow:inset 0 6px 14px rgba(0,0,0,.7)}
+.fach .label{align-self:center;display:flex;align-items:center;gap:8px;padding:6px 14px;margin-bottom:6px;
+  font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.06em;font-size:18px;color:#2c1d0a;text-align:center;line-height:1.15;
+  background:linear-gradient(170deg,#f1d993,#c9a14a 45%,#a77d2c 75%,#d8b863);border-radius:3px;
+  box-shadow:inset 0 0 0 1px rgba(110,75,20,.6), 0 2px 3px rgba(0,0,0,.5)}
+.fach .label svg{width:24px;height:24px;flex:none}
+.fach .label small{display:block;font-size:14px;letter-spacing:0}
+.fach .slip{max-width:none;font-size:17px;padding:8px 12px;min-height:44px}
+
+/* Erlass (Raum 2) */
+.decree{position:relative;padding:28px clamp(16px,4vw,40px);margin:14px 0;background:var(--perg-hell);
+  box-shadow:0 0 0 1px var(--tinte), 0 0 0 6px var(--perg-hell), 0 0 0 7px var(--tinte), 0 4px 12px rgba(60,35,10,.3)}
+.decree .dhead{text-align:center;font-family:var(--f-titel);letter-spacing:.3em;font-size:16px;color:var(--blau)}
+.decree .dtitle{text-align:center;font-family:var(--f-titel);font-variant:small-caps;font-size:26px;letter-spacing:.08em;margin:2px 0 10px}
+.decree .dtext{font-size:21px;line-height:2.25}
+.gap{display:inline-flex;align-items:center;justify-content:center;min-width:7.5em;min-height:46px;margin:0 3px;padding:0 10px;vertical-align:middle;
+  border:none;border-bottom:2px dashed var(--tinte-weich);background:rgba(176,141,60,.12);cursor:pointer;font-size:20px;
+  font-family:var(--f-hand);color:var(--blau);border-radius:3px 3px 0 0;line-height:1.2}
+.no-script .gap{font-family:var(--f-text);font-style:italic}
+.gap.filled{border-bottom-style:solid}
+.gap.ok{border-bottom-color:var(--blau);cursor:default}
+.gap.wrong{border-bottom-color:var(--siegel);color:var(--siegel)}
+.decree .dsign{text-align:right;margin-top:8px}
+.word{font-size:19px;padding:9px 14px}
+
+/* Chronik-Rolle (Raum 3) */
+.chron{margin:14px auto;max-width:620px}
+.roll{height:30px;border-radius:15px;background:linear-gradient(#e9d6a6,#b9965a 45%,#7b5b2a 80%,#c7a76c);
+  box-shadow:0 3px 6px rgba(0,0,0,.4);position:relative;z-index:1}
+.roll::before,.roll::after{content:"";position:absolute;top:3px;width:18px;height:24px;border-radius:5px;background:linear-gradient(#6a4520,#3c2410)}
+.roll::before{left:-12px}.roll::after{right:-12px}
+.chron .body{margin:-6px 18px;padding:22px 16px;background:var(--perg-hell);
+  box-shadow:inset 0 10px 14px -10px rgba(80,50,20,.5), inset 0 -10px 14px -10px rgba(80,50,20,.5)}
+.tslot{display:flex;align-items:center;gap:14px;width:100%;border:none;background:none;cursor:pointer;padding:6px 0;text-align:left}
+.tslot .num{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-titel);font-size:22px;
+  color:#f6dfb0;background:radial-gradient(circle at 38% 32%,#b23a33,var(--siegel) 55%,var(--siegel-dunkel))}
+.tslot .line{flex:1;min-height:58px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid rgba(59,42,26,.45);padding:4px 8px;border-radius:3px}
+.tslot .line .empty{color:rgba(59,42,26,.45);font-style:italic}
+.tslot .date{font-family:var(--f-hand);color:var(--blau);font-size:20px}
+.no-script .tslot .date{font-family:var(--f-text);font-style:italic}
+.tslot .slip{max-width:none}
+
+/* Bildpunkte (Raum 4) */
+.picwrap{position:relative}
+.marker{cursor:pointer}
+.marker circle{transition:r .2s}
+.marklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+.mslot{border:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px 10px;min-height:66px;text-align:left;
+  background:rgba(247,238,214,.7);box-shadow:inset 0 0 0 1px rgba(59,42,26,.4);border-radius:4px}
+.mslot .num{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-titel);font-size:20px;
+  color:#f6dfb0;background:radial-gradient(circle at 38% 32%,#b23a33,var(--siegel) 55%,var(--siegel-dunkel))}
+.mslot .inner{flex:1;display:flex;flex-direction:column;gap:4px}
+.mslot .sub{display:none;font-size:15px;color:var(--tinte-weich);font-style:italic}
+body.photo-karikatur .mslot .sub{display:block}
+body.photo-karikatur .mhint{display:none}
+.mslot .empty{color:rgba(59,42,26,.5);font-style:italic}
+.mslot .slip{max-width:none}
+.symrow{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;align-items:stretch;margin:10px 0}
+.symrow .sym{display:flex;align-items:center;gap:10px;padding:10px 12px;font-style:italic;border-left:4px solid var(--gold);background:rgba(247,238,214,.6)}
+.symrow .drop{border:none;cursor:pointer;min-height:60px;padding:6px;border-radius:4px;text-align:left;
+  background:rgba(70,40,15,.08);box-shadow:inset 0 0 0 2px rgba(59,42,26,.3);display:flex;align-items:center}
+.symrow .drop .empty{color:rgba(59,42,26,.5);font-style:italic;padding-left:8px}
+.symrow .slip{max-width:none;width:100%}
+
+/* Auswahlfragen */
+.options{display:grid;gap:12px;margin:14px 0}
+.option{display:flex;gap:14px;align-items:flex-start;width:100%;border:none;cursor:pointer;text-align:left;padding:14px 16px;min-height:56px;
+  font-size:19px;line-height:1.35;background:linear-gradient(170deg,#fbf3dd,#efe1bb);
+  box-shadow:0 2px 3px rgba(60,35,10,.3), inset 0 0 12px rgba(150,110,50,.2);border-radius:2px;touch-action:manipulation}
+.option .let{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-titel);
+  border:1.5px solid var(--tinte);font-size:18px}
+.option.struck{opacity:.55;text-decoration:line-through;text-decoration-color:var(--siegel);cursor:default}
+.option.right{box-shadow:0 0 0 3px var(--blau)}
+.option.right .let{background:var(--blau);color:#fff;border-color:var(--blau)}
+.optfb{font-size:16px;font-style:italic;color:var(--siegel);display:block;margin-top:4px;text-decoration:none}
+
+/* Zahlenschloss */
+.lockbox{display:flex;flex-direction:column;align-items:center;margin:84px 0 18px}
+.lock{position:relative;padding:58px 24px 22px;border-radius:14px 14px 22px 22px;
+  background:linear-gradient(160deg,#f3dc9a,#caa04a 35%,#9c7428 70%,#d4b25c);
+  box-shadow:inset 0 0 0 3px rgba(100,70,15,.55), inset 0 0 0 6px rgba(255,240,190,.3), inset 0 -10px 18px rgba(80,50,10,.35), 0 8px 16px rgba(30,15,5,.5)}
+.lock .shackle{position:absolute;left:50%;top:-58px;width:120px;height:90px;margin-left:-60px;z-index:-1;transition:transform .6s}
+.lock.open .shackle{transform:translateY(-22px)}
+.lock .plate-t{position:absolute;top:14px;left:0;right:0;text-align:center;font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.2em;font-size:15px;color:#4a3410}
+.wheels{display:flex;gap:10px;justify-content:center}
+.wheel{display:flex;flex-direction:column;align-items:center;gap:6px}
+.wheel button{width:62px;height:48px;border:none;border-radius:8px;cursor:pointer;font-size:22px;color:#3b2a10;touch-action:manipulation;
+  background:linear-gradient(#f6e4ad,#b88f3c);box-shadow:inset 0 0 0 1px rgba(90,60,15,.6), 0 2px 3px rgba(0,0,0,.35)}
+.wheel button:active{transform:translateY(1px)}
+.wheel .digit{width:62px;height:76px;display:grid;place-items:center;font-family:var(--f-titel);font-size:46px;color:#f2deb0;
+  border-radius:6px;background:linear-gradient(#140b04,#3b2614 30%,#4a3018 50%,#3b2614 70%,#140b04);
+  box-shadow:inset 0 0 0 2px #6b4c1a, inset 0 4px 10px rgba(0,0,0,.8);font-variant-numeric:tabular-nums}
+.lockq{text-align:center;margin:6px 0 12px}
+
+/* Feder-Eingabe */
+.quillrow{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.quillrow svg{width:56px;height:56px}
+.quillin{font-family:var(--f-titel);font-size:30px;letter-spacing:.25em;text-transform:uppercase;text-align:center;
+  width:min(360px,80vw);padding:8px 10px;border:none;border-bottom:2px solid var(--tinte);background:rgba(247,238,214,.7);color:var(--blau);
+  border-radius:3px 3px 0 0}
+.quillin:focus{outline:3px solid var(--blau);outline-offset:2px}
+.tiles{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:10px 0}
+.tile{font-family:var(--f-titel);font-size:30px;letter-spacing:.1em;padding:10px 18px;color:#f6dfb0;
+  background:radial-gradient(circle at 38% 32%,#b23a33,var(--siegel) 55%,var(--siegel-dunkel));border-radius:46% 52% 48% 50%;
+  box-shadow:0 3px 5px rgba(40,10,5,.5)}
+
+/* Hinweis */
+.hintbar{display:flex;justify-content:flex-end;margin-top:8px}
+.hintnote{margin:10px 0 0 auto;max-width:560px;padding:14px 18px 14px 50px;position:relative;
+  background:linear-gradient(170deg,#fffaf0,#efe4c7);box-shadow:0 3px 6px rgba(60,35,10,.35);transform:rotate(-.6deg)}
+.hintnote svg{position:absolute;left:10px;top:12px;width:30px;height:30px}
+.hintnote p{margin:.2em 0}
+
+/* Tintenklecks */
+.blot{position:fixed;width:90px;height:90px;pointer-events:none;z-index:60;animation:blot 1.4s ease-out forwards}
+@keyframes blot{0%{transform:scale(.2);opacity:0}15%{transform:scale(1.1);opacity:.85}30%{transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+
+/* Belohnung: Siegel bricht, Rolle öffnet sich */
+.reward{margin-top:40px;text-align:center}
+.bigseal{width:150px;height:150px;margin:0 auto;display:block;overflow:visible}
+.bigseal .half{transition:transform 1.1s cubic-bezier(.3,1.3,.5,1), opacity 1.2s}
+.bigseal.broken .half.l{transform:translate(-26px,16px) rotate(-22deg)}
+.bigseal.broken .half.r{transform:translate(26px,20px) rotate(19deg)}
+.bigseal .crumb{opacity:0;transition:transform 1s ease-in, opacity 1s}
+.bigseal.broken .crumb{opacity:1}
+.scroll{max-width:520px;margin:10px auto 0;overflow:hidden}
+.scroll .sheetin{background:var(--perg-hell);margin:-6px 16px;padding:18px 20px;
+  box-shadow:inset 0 10px 14px -10px rgba(80,50,20,.5), inset 0 -10px 14px -10px rgba(80,50,20,.5);
+  transform-origin:top center;animation:unroll 1s .4s both ease-out}
+@keyframes unroll{from{transform:scaleY(0);opacity:0} 70%{opacity:1} to{transform:scaleY(1);opacity:1}}
+.bausteinbig{font-family:var(--f-titel);font-size:64px;letter-spacing:.2em;color:var(--siegel);line-height:1.1;margin:6px 0}
+
+/* Brief / Umschlag */
+.envelope{position:relative;width:min(560px,100%);aspect-ratio:1.6;margin:30px auto;cursor:pointer;border:none;padding:0;background:none;display:block}
+.envelope .back{position:absolute;inset:0;background:#e8d6aa;box-shadow:0 10px 20px rgba(0,0,0,.5), inset 0 0 40px rgba(120,80,30,.45)}
+.envelope .flapb{position:absolute;inset:0;background:linear-gradient(160deg,#ecdcb2,#d8c08c);clip-path:polygon(0 100%,50% 48%,100% 100%)}
+.envelope .flaps{position:absolute;inset:0;background:linear-gradient(90deg,#e2cd9c,#ecdcb3 50%,#e2cd9c);clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);opacity:.0}
+.envelope .flapt{position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(#dfc895,#ecdcb3);
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s;box-shadow:inset 0 0 30px rgba(120,80,30,.4)}
+.envelope.open .flapt{transform:rotateX(180deg)}
+.envelope .wax{position:absolute;left:50%;top:60%;width:120px;height:120px;margin:-60px 0 0 -60px}
+.envelope .addr{position:absolute;left:0;right:0;bottom:12%;text-align:center;font-family:var(--f-hand);font-size:24px;color:var(--tinte)}
+.no-script .envelope .addr{font-family:var(--f-text);font-style:italic}
+.letter{max-width:640px;margin:0 auto;padding:30px clamp(18px,4vw,40px);background:var(--perg-hell);
+  box-shadow:0 0 0 1px rgba(59,42,26,.3), 0 6px 16px rgba(60,35,10,.35);
+  background-image:linear-gradient(rgba(0,0,0,0) 49.7%,rgba(90,60,25,.12) 50%,rgba(0,0,0,0) 50.3%),
+    linear-gradient(90deg,rgba(0,0,0,0) 49.8%,rgba(90,60,25,.08) 50%,rgba(0,0,0,0) 50.2%)}
+.letter .hand{font-size:23px}
+.letter .sig{text-align:right;margin-top:14px}
+
+/* Startseite */
+.title-orn{display:flex;justify-content:center;gap:22px;align-items:center;margin:4px 0 8px}
+.title-orn svg{width:70px;height:70px}
+.subtitle{text-align:center;font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.18em;color:var(--blau);font-size:20px}
+.names{display:grid;gap:16px;max-width:460px;margin:22px auto}
+.names label{font-family:var(--f-titel);font-variant:small-caps;letter-spacing:.08em;font-size:19px}
+.names input{display:block;width:100%;margin-top:4px;font-family:var(--f-hand);font-size:26px;padding:6px 10px;color:var(--blau);
+  border:none;border-bottom:2px solid var(--tinte);background:rgba(247,238,214,.75);border-radius:3px 3px 0 0}
+.no-script .names input{font-family:var(--f-text);font-style:italic}
+.names input:focus{outline:3px solid var(--blau);outline-offset:2px}
+
+/* Urkunde */
+.cert{max-width:680px;margin:0 auto;padding:36px clamp(18px,4vw,46px);text-align:center;position:relative;background:var(--perg-hell);
+  box-shadow:0 0 0 2px var(--gold), 0 0 0 7px var(--perg-hell), 0 0 0 8px var(--tinte), 0 6px 18px rgba(60,35,10,.35)}
+.cert .names-big{font-family:var(--f-hand);font-size:36px;color:var(--blau);line-height:1.3;margin:10px 0}
+.no-script .cert .names-big{font-family:var(--f-text);font-style:italic}
+.cert .stat{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin:18px 0}
+.cert .stat div{font-family:var(--f-titel);font-size:30px}
+.cert .stat small{display:block;font-family:var(--f-text);font-size:15px;font-variant:small-caps;letter-spacing:.14em;color:var(--tinte-weich)}
+
+/* Dialog */
+#modal{position:fixed;inset:0;z-index:70;background:rgba(15,8,3,.7);display:none;align-items:center;justify-content:center;padding:16px}
+#modal.show{display:flex}
+#modal .sheet{max-width:520px;width:100%;padding:44px 34px;text-align:center}
+
+/* Schmale Bildschirme */
+@media (max-width: 760px){
+  body{font-size:19px}
+  #topbar{flex-wrap:wrap;gap:8px;padding:6px 10px}
+  .watch{min-width:0}.watch svg{width:44px;height:50px}.watch .zeit{font-size:22px}
+  .seals{order:3;flex-basis:100%}
+  .tools{margin-left:auto}
+  .secretary{grid-template-columns:1fr}
+  .fach{min-height:120px}
+  .marklist{grid-template-columns:1fr}
+  .symrow{grid-template-columns:1fr}
+  .corner{width:52px;height:52px}
+  .sheet{padding-top:52px;padding-bottom:56px}
+}
+@media print{
+  #topbar,#vignette,#candle,.actions,.noprint{display:none!important}
+  body{background:#fff}
+  .sheet-wrap{filter:none}
+  .sheet{clip-path:none;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Gemeinsame SVG-Muster für den Kupferstich-Stil -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+ <defs>
+  <pattern id="h1" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="4" stroke="#3b2a1a" stroke-width=".8"/></pattern>
+  <pattern id="h2" width="2.8" height="2.8" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="2.8" stroke="#3b2a1a" stroke-width="1.05"/></pattern>
+  <pattern id="hx" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><path d="M0 0V4M0 0H4" stroke="#3b2a1a" stroke-width=".85" fill="none"/></pattern>
+  <pattern id="hxd" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><path d="M0 0V3M0 0H3" stroke="#3b2a1a" stroke-width="1.05" fill="none"/></pattern>
+  <pattern id="hh" width="8" height="3.4" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="8" y2="0" stroke="#3b2a1a" stroke-width=".7"/></pattern>
+  <pattern id="hh2" width="8" height="6.5" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="8" y2="0" stroke="#3b2a1a" stroke-width=".6"/></pattern>
+  <pattern id="hv" width="3.2" height="8" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="#3b2a1a" stroke-width=".8"/></pattern>
+  <pattern id="hv2" width="5.5" height="8" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="#3b2a1a" stroke-width=".6"/></pattern>
+  <pattern id="dots" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".75" fill="#3b2a1a"/></pattern>
+  <linearGradient id="skyfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".75" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <mask id="skymask"><rect width="800" height="330" fill="url(#skyfade)"/></mask>
+  <filter id="rough" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter>
+  <radialGradient id="waxg" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#c4463e"/><stop offset=".45" stop-color="#8b1e1e"/><stop offset="1" stop-color="#4f0c0c"/></radialGradient>
+  <radialGradient id="brassg" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fbeab0"/><stop offset=".45" stop-color="#c9a14a"/><stop offset="1" stop-color="#6e4f18"/></radialGradient>
+  <clipPath id="halfL"><path d="M-60 -60 H2 L-4 -30 L5 -12 L-3 4 L6 20 L-2 36 L3 60 H-60Z"/></clipPath>
+  <clipPath id="halfR"><path d="M60 -60 H2 L-4 -30 L5 -12 L-3 4 L6 20 L-2 36 L3 60 H60Z"/></clipPath>
+  <!-- Wiederverwendbare Symbole -->
+  <symbol id="lys" viewBox="0 0 100 100"><path fill="currentColor" d="M50 4C41 17 39 33 46 49 31 43 16 48 13 61 10 74 22 82 31 76 23 74 21 64 28 60 36 57 43 62 45 69H38V76H46C45 85 41 91 35 95H65C59 91 55 85 54 76H62V69H55C57 62 64 57 72 60 79 64 77 74 69 76 78 82 90 74 87 61 84 48 69 43 54 49 61 33 59 17 50 4Z"/></symbol>
+  <symbol id="cross" viewBox="0 0 100 100"><path fill="currentColor" d="M44 6H56V30H80V42H56V94H44V42H20V30H44Z"/></symbol>
+  <symbol id="hoe" viewBox="0 0 100 100"><path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M22 92 78 14"/><path fill="currentColor" d="M64 8 92 22 86 32 60 18Z"/><path fill="none" stroke="currentColor" stroke-width="5" d="M30 60c-10 4-18 4-22-4M38 52c8 6 14 14 12 24"/></symbol>
+ </defs>
+</svg>
+
+<div id="topbar" class="hidden" role="banner">
+  <div class="watch" aria-live="off">
+    <svg viewBox="0 0 60 68" aria-hidden="true">
+      <circle cx="30" cy="7" r="5" fill="none" stroke="url(#brassg)" stroke-width="3"/>
+      <rect x="26" y="10" width="8" height="6" rx="2" fill="url(#brassg)"/>
+      <circle cx="30" cy="40" r="27" fill="url(#brassg)"/>
+      <circle cx="30" cy="40" r="22.5" fill="#f6ecd2" stroke="#6e4f18" stroke-width="1"/>
+      <g id="ticks"></g>
+      <line id="hand-m" x1="30" y1="40" x2="30" y2="24" stroke="#2a1c0e" stroke-width="2.2" stroke-linecap="round"/>
+      <line id="hand-s" x1="30" y1="43" x2="30" y2="20" stroke="#8b1e1e" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="30" cy="40" r="1.8" fill="#2a1c0e"/>
+    </svg>
+    <div class="zeit"><small>Zeit</small><span id="zeit">00:00</span></div>
+  </div>
+  <div class="seals" id="seals" aria-label="Fortschritt: fünf Siegel"></div>
+  <div class="tools">
+    <button class="ibtn" id="btn-sound" aria-pressed="false" aria-label="Klang ein- oder ausschalten" title="Klang"></button>
+    <button class="ibtn" id="btn-candle" aria-pressed="true" aria-label="Kerzenflackern ein- oder ausschalten" title="Kerzenlicht"></button>
+    <button class="ibtn" id="btn-new" aria-label="Neues Spiel" title="Neues Spiel"></button>
+  </div>
+</div>
+
+<main id="stage"></main>
+<div id="vignette"></div>
+<div id="candle"></div>
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-t"></div>
+
+<script>
+"use strict";
+/* =========================================================
+   Hilfsfunktionen
+   ========================================================= */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Prüfsumme (die Lösungen stehen nicht im Klartext im Quelltext)
+function h(s){s='1789§'+s;let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
+const K = new Set(["jld8mk3edg","202t2qpk4xd","15hgvvd23vb","1l5elk6ugwo","1px6l85jty5","qq61g5e4eb","28iqlij80uu","11uppsbt7xz","10mtz72du84","vh3hhgtt1u","2b55zz9sd1o","21a8s2eqdeg","1nv27768vyr","x6hs7gxzim","2aqy0pam4r4","1exigugvsro","kk1iqe72r6","1mlnz9id3o0","97whal6if7","4d2u5zehzp","m0ocn95o4j","m40dxk36tp","1ha847o3i50","1gv5fw38rfi","4h6f9s0u3i","iitz2uby8h","1gjxhgzldgx","1y5kp6cqwzl","24hre28joqd","1z87nj8csl1","jfx375lc1c","1rs1ycod0vr","29vs6r9z9kl","qerbrjds5h","1xr93247uxv","10qjeixj1g2","1taoyb2ps3z","ibhca3b9pk"]);
+const ok = s => K.has(h(s));
+const dec = b => atob(b).split('').reverse().join('');
+const dec2 = b => atob(b);
+
+// Zufall mit Startwert (für gleichbleibende Zeichnungen)
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+
+/* =========================================================
+   Spielstand
+   ========================================================= */
+const KEY = 'dossier1789_v1';
+function freshState(){return {v:1, names:[], phase:'start', room:0, t:{}, roomsDone:{}, hints:0,
+  timerStart:0, elapsed:0, timerOn:false, sound:false, flicker:!RM, finalTime:0};}
+let S;
+try{ S = JSON.parse(localStorage.getItem(KEY)) || freshState(); }catch(e){ S = freshState(); }
+if(!S || S.v!==1) S = freshState();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function T(id){ if(!S.t[id]) S.t[id] = {pl:{}, done:false, hint:0, wrong:[], wh:null}; return S.t[id]; }
+
+/* =========================================================
+   Klang (WebAudio, ohne Dateien) – standardmäßig aus
+   ========================================================= */
+let AC = null;
+function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(AC && AC.state==='suspended') AC.resume(); return AC; }
+function noise(dur){ const a=ac(); const b=a.createBuffer(1, a.sampleRate*dur, a.sampleRate); const d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; const s=a.createBufferSource(); s.buffer=b; return s; }
+const SND = {
+  scratch(){ if(!S.sound) return; const a=ac(); if(!a) return; const t=a.currentTime;
+    for(let k=0;k<3;k++){ const n=noise(.12), f=a.createBiquadFilter(), g=a.createGain(); f.type='bandpass'; f.frequency.value=3200+k*700; f.Q.value=2.5;
+      g.gain.setValueAtTime(0,t+k*.13); g.gain.linearRampToValueAtTime(.16,t+k*.13+.02); g.gain.exponentialRampToValueAtTime(.001,t+k*.13+.11);
+      n.connect(f).connect(g).connect(a.destination); n.start(t+k*.13); } },
+  crack(){ if(!S.sound) return; const a=ac(); if(!a) return; const t=a.currentTime;
+    const n=noise(.25), f=a.createBiquadFilter(), g=a.createGain(); f.type='highpass'; f.frequency.value=900;
+    g.gain.setValueAtTime(.6,t); g.gain.exponentialRampToValueAtTime(.001,t+.2); n.connect(f).connect(g).connect(a.destination); n.start(t);
+    const o=a.createOscillator(), g2=a.createGain(); o.type='sine'; o.frequency.setValueAtTime(160,t); o.frequency.exponentialRampToValueAtTime(50,t+.18);
+    g2.gain.setValueAtTime(.5,t); g2.gain.exponentialRampToValueAtTime(.001,t+.25); o.connect(g2).connect(a.destination); o.start(t); o.stop(t+.3); },
+  bell(){ if(!S.sound) return; const a=ac(); if(!a) return; const t=a.currentTime;
+    [[523,1],[1046,.5],[1568,.25],[2093,.18],[659,.3]].forEach(([fr,v])=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=fr;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.18*v,t+.01); g.gain.exponentialRampToValueAtTime(.0005,t+2.6);
+      o.connect(g).connect(a.destination); o.start(t); o.stop(t+2.7); }); },
+  page(){ if(!S.sound) return; const a=ac(); if(!a) return; const t=a.currentTime;
+    const n=noise(.45), f=a.createBiquadFilter(), g=a.createGain(); f.type='bandpass'; f.Q.value=.8; f.frequency.setValueAtTime(600,t); f.frequency.exponentialRampToValueAtTime(3500,t+.35);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.25,t+.08); g.gain.exponentialRampToValueAtTime(.001,t+.42); n.connect(f).connect(g).connect(a.destination); n.start(t); },
+  soft(){ if(!S.sound) return; const a=ac(); if(!a) return; const t=a.currentTime; const o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.value=220;
+    g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.001,t+.25); o.connect(g).connect(a.destination); o.start(t); o.stop(t+.3); }
+};
+
+/* =========================================================
+   Zierelemente (inline-SVG)
+   ========================================================= */
+const ORN = {
+  corner: `<svg class="corner CL" viewBox="0 0 80 80" aria-hidden="true"><g fill="none" stroke="#b08d3c" stroke-width="1.6" stroke-linecap="round">
+    <path d="M4 76V14Q4 4 14 4H76"/><path d="M10 70V18Q10 10 18 10H70" stroke-width=".8"/>
+    <path d="M18 18c10 0 18 6 18 16 0 7-6 11-11 8s-3-10 3-9"/><path d="M18 18c0 10 6 18 16 18"/>
+    <path d="M36 12c8-4 18-2 24 4M12 36c-4 8-2 18 4 24"/><circle cx="18" cy="18" r="3" fill="#b08d3c"/>
+    <path d="M44 10c4 3 4 7 0 9M10 44c3 4 7 4 9 0"/></g></svg>`,
+  divider: `<svg class="divider" viewBox="0 0 420 34" aria-hidden="true"><g fill="none" stroke="#b08d3c" stroke-width="1.4" stroke-linecap="round">
+    <path d="M10 17H160M260 17H410"/><path d="M160 17c10-12 24-12 30-2s-6 14-11 8 3-9 7-4"/><path d="M260 17c-10-12-24-12-30-2s6 14 11 8-3-9-7-4"/>
+    <path d="M70 17c8-8 18-8 24 0M350 17c-8-8-18-8-24 0" stroke-width="1"/><path d="M110 17c6 6 14 6 20 0M310 17c-6 6-14 6-20 0" stroke-width="1"/></g>
+    <use href="#lys" x="198" y="5" width="24" height="24" style="color:#8b1e1e"/></svg>`,
+  cockade: (sz=70) => { let p=''; for(let i=0;i<48;i++){const a=i*Math.PI/24; p+=`<line x1="${50+30*Math.cos(a)}" y1="${50+30*Math.sin(a)}" x2="${50+47*Math.cos(a)}" y2="${50+47*Math.sin(a)}" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>`;}
+    return `<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#8b1e1e"/><circle cx="50" cy="50" r="34" fill="#f4ecd8"/><circle cx="50" cy="50" r="20" fill="#1f3a6b"/>${p}<circle cx="50" cy="50" r="7" fill="url(#brassg)"/><circle cx="50" cy="50" r="48" fill="none" stroke="#3b2a1a" stroke-width="1"/></svg>`; },
+  lily: (sz=60,col='#1f3a6b') => `<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" aria-hidden="true" style="color:${col}"><use href="#lys" width="100" height="100"/></svg>`,
+  cap: (sz=70) => `<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" aria-hidden="true"><path d="M14 86C12 60 20 34 42 20 58 10 80 12 88 28 78 24 68 28 66 38 72 52 76 68 80 86Z" fill="#8b1e1e" stroke="#3b2a1a" stroke-width="2"/><path d="M14 86C40 80 60 80 80 86" fill="none" stroke="#3b2a1a" stroke-width="2"/><path d="M30 40c10-8 22-10 30-6" stroke="rgba(0,0,0,.3)" fill="none" stroke-width="2"/><circle cx="34" cy="64" r="12" fill="#8b1e1e" stroke="#3b2a1a"/><circle cx="34" cy="64" r="8" fill="#f4ecd8"/><circle cx="34" cy="64" r="4.5" fill="#1f3a6b"/></svg>`,
+  quill: (sz=70) => `<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" aria-hidden="true"><path d="M20 70h34l-4 22H24Z" fill="#3b2a1a"/><ellipse cx="37" cy="70" rx="18" ry="4" fill="#5a4229"/><ellipse cx="37" cy="69" rx="9" ry="2" fill="#120a04"/>
+    <path d="M38 68C46 46 62 24 92 6 82 30 66 50 44 64Z" fill="#f4ecd8" stroke="#3b2a1a" stroke-width="1.5"/><path d="M38 68 90 8" stroke="#3b2a1a" stroke-width="1.2"/>
+    <path d="M50 54l10-2M56 46l11-2M62 38l11-3M69 30l10-3M58 52l6 6M64 44l7 6M71 36l6 6" stroke="#3b2a1a" stroke-width=".8"/></svg>`,
+  hintIcon: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="url(#waxg)"/><text x="50" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="52" fill="#f6dfb0">?</text></svg>`,
+  blot: () => { const r=rng(Math.floor(Math.random()*1e6)); let d='M50 20'; const pts=[]; for(let i=0;i<14;i++){const a=i/14*Math.PI*2, rr=22+r()*14; pts.push([50+rr*Math.cos(a),50+rr*Math.sin(a)]);}
+    d='M'+pts.map(p=>p.map(v=>v.toFixed(1)).join(' ')).join('L')+'Z'; let drops=''; for(let i=0;i<6;i++){const a=r()*6.28, rr=36+r()*10; drops+=`<circle cx="${50+rr*Math.cos(a)}" cy="${50+rr*Math.sin(a)}" r="${1.5+r()*3.5}"/>`;}
+    return `<svg viewBox="0 0 100 100" class="blot" aria-hidden="true"><g fill="#1c120a" opacity=".85"><path d="${d}" stroke="#1c120a" stroke-width="8" stroke-linejoin="round"/>${drops}</g></svg>`; }
+};
+
+// Wachssiegel (mit zwei Hälften zum Aufbrechen)
+function sealSVG(cls, label, big){
+  const r = rng(label.charCodeAt(0)*31+7); let edge='';
+  for(let i=0;i<22;i++){const a=i/22*Math.PI*2, rr=44+r()*5; edge+=(i?'L':'M')+(rr*Math.cos(a)).toFixed(1)+' '+(rr*Math.sin(a)).toFixed(1);} edge+='Z';
+  const face = `<path d="${edge}" fill="url(#waxg)"/><circle r="32" fill="none" stroke="rgba(40,5,5,.55)" stroke-width="2.5"/><circle r="29" fill="none" stroke="rgba(255,190,170,.25)" stroke-width="1"/>
+    <use href="#lys" x="-17" y="-20" width="34" height="34" style="color:rgba(60,8,8,.75)"/>
+    <text y="27" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="rgba(255,210,180,.55)">${label}</text>`;
+  const crumbs = big ? `<g class="crumb"><circle cx="-8" cy="52" r="3" fill="#7a1616"/><circle cx="10" cy="58" r="2" fill="#7a1616"/><circle cx="2" cy="48" r="1.6" fill="#7a1616"/></g>` : '';
+  return `<svg class="${cls}" viewBox="-60 -60 120 120" aria-hidden="true">
+    <g class="half l"><g clip-path="url(#halfL)">${face}</g></g><g class="half r"><g clip-path="url(#halfR)">${face}</g></g>${crumbs}</svg>`;
+}
+
+/* =========================================================
+   Illustrationen im Kupferstich-Stil
+   ========================================================= */
+const INK = '#3b2a1a', PAP = '#f3e7c8';
+function frameSVG(inner, vb='0 0 800 360', label){
+  const [,,w,hh] = vb.split(' ').map(Number);
+  return `<svg viewBox="${vb}" role="img" aria-label="${esc(label)}"><rect width="${w}" height="${hh}" fill="${PAP}"/>
+    <g filter="url(#rough)">${inner}</g>
+    <rect x="6" y="6" width="${w-12}" height="${hh-12}" fill="none" stroke="${INK}" stroke-width="2.2"/>
+    <rect x="12" y="12" width="${w-24}" height="${hh-24}" fill="none" stroke="${INK}" stroke-width=".7"/></svg>`;
+}
+
+// Raum 0: Feder und Tintenfass auf dem Schreibpult
+function illus0(){
+  let s = `<rect x="12" y="12" width="776" height="216" fill="url(#hh2)" opacity=".5"/>`;
+  s += `<path d="M12 228H788V348H12Z" fill="url(#h1)"/><path d="M12 228H788" stroke="${INK}" stroke-width="2"/>`;
+  // Kerze
+  s += `<rect x="120" y="120" width="34" height="108" fill="${PAP}" stroke="${INK}" stroke-width="1.5"/><rect x="140" y="120" width="14" height="108" fill="url(#hv)"/>
+    <path d="M137 120V108" stroke="${INK}" stroke-width="2"/><path d="M137 106c-9-12-4-26 0-40 4 14 9 28 0 40Z" fill="${PAP}" stroke="${INK}" stroke-width="1.3"/>
+    <ellipse cx="137" cy="228" rx="46" ry="9" fill="url(#hx)" stroke="${INK}"/><path d="M95 228q0 14 42 14t42-14" fill="url(#h2)" stroke="${INK}"/>`;
+  for(let i=0;i<14;i++){const a=-Math.PI/2+(i-6.5)*0.2; s+=`<line x1="${137+30*Math.cos(a)}" y1="${88+30*Math.sin(a)}" x2="${137+55*Math.cos(a)}" y2="${88+55*Math.sin(a)}" stroke="${INK}" stroke-width=".6"/>`;}
+  // Papiere
+  s += `<path d="M280 236L520 220 560 300 300 318Z" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><path d="M300 318 560 300 556 290 296 308Z" fill="url(#h1)"/>`;
+  for(let i=0;i<6;i++) s+=`<path d="M${312+i*3} ${248+i*10}Q${400} ${238+i*10} ${510-i} ${236+i*10}" stroke="${INK}" stroke-width=".8" fill="none" opacity=".7"/>`;
+  s += `<g transform="translate(470 262)">${'<circle r="16" fill="#8b1e1e" stroke="'+INK+'"/>'}<use href="#lys" x="-10" y="-11" width="20" height="20" style="color:#4f0c0c"/></g>`;
+  // Tintenfass & Feder
+  s += `<path d="M620 228h80l-8-46h-64Z" fill="url(#hxd)" stroke="${INK}" stroke-width="1.5"/><ellipse cx="660" cy="182" rx="32" ry="7" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><ellipse cx="660" cy="181" rx="14" ry="3" fill="${INK}"/>
+    <path d="M662 178C690 120 730 64 790 30 760 92 724 140 676 176Z" fill="${PAP}" stroke="${INK}" stroke-width="1.5"/><path d="M662 178 786 34" stroke="${INK}" stroke-width="1.3"/>`;
+  for(let i=0;i<12;i++){ const t=i/12; const x=676+t*100, y=168-t*124; s+=`<path d="M${x} ${y}l${10-t*4} ${4}M${x-6} ${y+4}l-6 -10" stroke="${INK}" stroke-width=".7"/>`; }
+  return frameSVG(s, '0 0 800 360', 'Schreibpult mit Kerze, Brief und Feder');
+}
+
+// Raum 1: die drei Stände als Silhouetten in Medaillons
+function illus1(){
+  const SIL = '#2a1c10';
+  const cleric = `<path d="M49 27L50 4 60-8 70 4 71 27Z" fill="${SIL}"/><path d="M60-6V22M53 8H67" stroke="${PAP}" stroke-width="1.2"/>
+    <circle cx="60" cy="35" r="11" fill="${SIL}"/>
+    <path d="M50 44Q60 51 70 44L82 54Q90 60 91 76L97 150 105 236H15L23 150 29 76Q30 60 38 54Z" fill="${SIL}"/>
+    <path d="M60 58V200M46 92H74" stroke="${PAP}" stroke-width="2.4"/><path d="M38 150Q60 160 82 150" stroke="${PAP}" stroke-width="1" fill="none"/>
+    <path d="M104 28V236" stroke="${SIL}" stroke-width="3.2"/><path d="M104 34C104 6 128 4 128 20 128 34 112 34 111 25" stroke="${SIL}" stroke-width="3.2" fill="none"/>
+    <path d="M84 70Q96 86 104 96" stroke="${SIL}" stroke-width="8" stroke-linecap="round"/>`;
+  const noble = `<path d="M33 24L44 9Q60 2 76 9L87 24Q60 17 33 24Z" fill="${SIL}"/><circle cx="60" cy="33" r="11" fill="${SIL}"/>
+    <path d="M50 30Q44 40 48 50" stroke="${SIL}" stroke-width="5" fill="none"/><path d="M46 46l-6 4 6 3" fill="${SIL}"/>
+    <path d="M46 46Q60 52 74 46L84 58 88 120 99 162Q60 172 21 162L32 120 36 58Z" fill="${SIL}"/>
+    <path d="M58 50l2 30 2-30" stroke="${PAP}" stroke-width="1.3" fill="none"/><path d="M56 56h8M56 64h8M57 72h6" stroke="${PAP}" stroke-width=".8"/>
+    <path d="M44 162L46 222H52L54 162ZM66 162L68 222H74L76 162Z" fill="${SIL}"/><path d="M39 222h17v8H35ZM66 222h17l2 8H64Z" fill="${SIL}"/>
+    <path d="M30 124 -10 186" stroke="${SIL}" stroke-width="3"/><path d="M26 116l10 12M24 126l12-6" stroke="${SIL}" stroke-width="3"/>
+    <path d="M84 62Q102 92 86 110" stroke="${SIL}" stroke-width="8" stroke-linecap="round" fill="none"/>`;
+  const peasant = `<ellipse cx="66" cy="30" rx="24" ry="5" fill="${SIL}" transform="rotate(10 66 30)"/><path d="M55 29Q57 12 68 12 80 13 80 33Z" fill="${SIL}"/>
+    <circle cx="66" cy="42" r="10" fill="${SIL}"/>
+    <path d="M54 52Q70 46 84 60L92 102Q95 140 86 162H34Q30 122 38 92 42 64 54 52Z" fill="${SIL}"/>
+    <path d="M42 160 38 226H50L56 162ZM70 160 80 226H92L84 158Z" fill="${SIL}"/><ellipse cx="42" cy="230" rx="11" ry="6" fill="${SIL}"/><ellipse cx="88" cy="230" rx="11" ry="6" fill="${SIL}"/>
+    <path d="M36 100H90" stroke="${PAP}" stroke-width="1"/><path d="M86 66Q104 80 100 98" stroke="${SIL}" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M100 98 122 236" stroke="${SIL}" stroke-width="3.2"/><path d="M114 228 136 236 132 242 110 236Z" fill="${SIL}"/>
+    <path d="M-4 236l8-40M2 236l12-42M8 236l3-46M14 236l-3-40" stroke="${SIL}" stroke-width="1.6"/><path d="M-6 196q6-8 12 0M6 194q6-8 10 0M8 190q4-8 8 0" stroke="${SIL}" stroke-width="2" fill="none"/>`;
+  const med = (cx, fig, title, sub) => `<g transform="translate(${cx} 0)">
+     <ellipse cx="0" cy="168" rx="104" ry="134" fill="url(#h1)" stroke="${INK}" stroke-width="2"/><ellipse cx="0" cy="168" rx="96" ry="126" fill="none" stroke="${INK}" stroke-width=".8"/>
+     <ellipse cx="0" cy="168" rx="80" ry="110" fill="${PAP}" opacity=".55"/>
+     <g transform="translate(-60 60) scale(.98)">${fig}</g>
+     <path d="M-92 300h184l-12 14 12 14H-92l12-14Z" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/>
+     <text x="0" y="319" text-anchor="middle" font-family="Didot,'Bodoni 72',Baskerville,Georgia,serif" font-size="17" letter-spacing="2" fill="${INK}">${title}</text>
+     <text x="0" y="24" text-anchor="middle" font-family="Didot,'Bodoni 72',Baskerville,Georgia,serif" font-size="13" letter-spacing="3" fill="${INK}">${sub}</text></g>`;
+  let s = `<rect x="12" y="12" width="776" height="336" fill="url(#hh2)" opacity=".35"/>`;
+  s += med(160, cleric, 'ERSTER STAND', 'CLERGÉ') + med(400, noble, 'ZWEITER STAND', 'NOBLESSE') + med(640, peasant, 'DRITTER STAND', 'TIERS ÉTAT');
+  return frameSVG(s, '0 0 800 360', 'Die drei Stände als Silhouetten: Geistlicher, Adliger, Bauer');
+}
+
+// Raum 2: Sitzungssaal der Generalstände in Versailles
+function illus2(){
+  let s = '';
+  const VPy=150;
+  // Decke, Wände, Boden
+  s += `<path d="M12 12H788L560 92H240Z" fill="url(#hxd)"/><path d="M12 12 240 92M788 12 560 92" stroke="${INK}" stroke-width="1.2"/>`;
+  s += `<path d="M240 92H560V232H240Z" fill="url(#h1)" stroke="${INK}" stroke-width="1.4"/>`;
+  s += `<path d="M12 348 240 232H560L788 348Z" fill="url(#hh)" opacity=".6"/>`;
+  for(let i=0;i<=12;i++){const xb=12+i*(776/12), xt=240+i*(320/12); s+=`<path d="M${xb} 348L${xt} 232" stroke="${INK}" stroke-width=".5" opacity=".6"/>`;}
+  // Thron mit Baldachin
+  s += `<path d="M330 92h140v20q-70 26-140 0Z" fill="url(#hxd)" stroke="${INK}"/><path d="M340 112q-6 50 2 108M460 112q6 50-2 108" stroke="${INK}" stroke-width="2" fill="none"/>
+    <path d="M342 112q20 30 0 108H330q16-56 12-108ZM458 112q-20 30 0 108h12q-16-56-12-108Z" fill="url(#h2)"/>
+    <use href="#lys" x="386" y="94" width="28" height="28" style="color:${INK}"/>
+    <path d="M360 232v-22h80v22Z" fill="url(#h1)" stroke="${INK}"/><path d="M372 210v-50q28-14 56 0v50Z" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><path d="M380 166q20-8 40 0v40h-40Z" fill="url(#hx)"/>
+    <circle cx="400" cy="172" r="6" fill="${PAP}" stroke="${INK}"/>`;
+  // Säulen links/rechts
+  const yt = x => 12 + 80*(x-12)/228, yb = x => 348 - 116*(x-12)/228;
+  [30,92,142,180,210,232].forEach((x,i)=>{
+    const w = 26*(1-0.72*(x-12)/228);
+    [[x,1],[800-x-w,-1]].forEach(([cx,side])=>{
+      const top = yt(side>0?cx:800-cx-w+ (side<0?w:0)), bot = yb(side>0?cx:800-cx-w+(side<0?w:0));
+      s += `<rect x="${cx}" y="${top+6}" width="${w}" height="${bot-top-6}" fill="${PAP}" stroke="${INK}" stroke-width="1"/>
+        <rect x="${side>0?cx+w*.55:cx}" y="${top+6}" width="${w*.45}" height="${bot-top-6}" fill="url(#hv)"/>
+        <rect x="${cx-w*.15}" y="${top}" width="${w*1.3}" height="${w*.4}" fill="url(#h2)" stroke="${INK}" stroke-width=".8"/>
+        <rect x="${cx-w*.15}" y="${bot-w*.4}" width="${w*1.3}" height="${w*.4}" fill="${PAP}" stroke="${INK}" stroke-width=".8"/>`;
+    });
+  });
+  // Abgeordnete in Reihen
+  for(let r=0;r<8;r++){
+    const d=r/8, y=338-d*96, rh=9-d*6, x0=70+d*200, x1=345+d*30, step=rh*2.7;
+    for(let x=x0;x<x1;x+=step){
+      [x, 800-x].forEach(xx=>{
+        s += `<path d="M${xx-rh*1.4} ${y+rh*2}q0-${rh*1.8} ${rh*1.4}-${rh*1.8}t${rh*1.4} ${rh*1.8}Z" fill="url(#hxd)" stroke="${INK}" stroke-width=".5"/>
+          <circle cx="${xx}" cy="${y-rh*.1}" r="${rh*.75}" fill="${PAP}" stroke="${INK}" stroke-width=".7"/>`;
+        if(r<4) s += `<path d="M${xx-rh*.9} ${y-rh*.5}q${rh*.9}-${rh*.9} ${rh*1.8} 0" stroke="${INK}" fill="none" stroke-width="${.5+rh*.08}"/>`;
+      });
+    }
+  }
+  // Fenster im Hintergrund
+  [262,300,500,538].forEach(x=>{ s+=`<path d="M${x} 210v-74q0-12 0-12h0" stroke="none"/><rect x="${x-10}" y="128" width="20" height="40" fill="${PAP}" stroke="${INK}" stroke-width=".8"/><path d="M${x} 128v40M${x-10} 148h20" stroke="${INK}" stroke-width=".6"/>`; });
+  return frameSVG(s, '0 0 800 360', 'Der Sitzungssaal der Generalstände in Versailles mit dem Thron des Königs und den Reihen der Abgeordneten');
+}
+
+// Raum 3: Halle des Ballhauses mit Schwurhänden
+function illus3(){
+  let s = '';
+  s += `<path d="M12 12H788V120H12Z" fill="url(#hh)" opacity=".7"/>`;
+  // Dachbalken
+  for(let i=0;i<7;i++){ const x=40+i*120; s+=`<path d="M${x} 12v26" stroke="${INK}" stroke-width="6"/>`; }
+  s += `<path d="M12 38H788" stroke="${INK}" stroke-width="5"/>`;
+  // Hohe Fenster
+  for(let i=0;i<8;i++){ const x=66+i*92; s+=`<path d="M${x} 150V72q0-18 20-18t20 18v78Z" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/>
+     <path d="M${x+20} 54v96M${x} 100h40" stroke="${INK}" stroke-width=".9"/>
+     <path d="M${x+6} 152 ${x-40} 330M${x+34} 152 ${x+10} 330" stroke="${INK}" stroke-width=".4" opacity=".55"/>`; }
+  s += `<path d="M12 150H788V176H12Z" fill="url(#h2)"/><path d="M12 150H788M12 176H788" stroke="${INK}"/>`;
+  // Galerie mit Zuschauern
+  const R=rng(17);
+  for(let x=24;x<780;x+=13){ const y=146-R()*4; s+=`<circle cx="${x}" cy="${y-6}" r="4.2" fill="${PAP}" stroke="${INK}" stroke-width=".7"/><path d="M${x-5} ${y+2}q5-7 10 0" fill="url(#hxd)"/>`; }
+  s += `<path d="M12 176H788V348H12Z" fill="url(#hv2)" opacity=".5"/>`;
+  // Tisch mit Bailly
+  s += `<path d="M352 268h96l-6 40h-84Z" fill="url(#hx)" stroke="${INK}" stroke-width="1.3"/><path d="M346 262h108v8H346Z" fill="${PAP}" stroke="${INK}"/>
+    <path d="M392 262l-2-46q10-8 20 0l-2 46Z" fill="url(#hxd)" stroke="${INK}"/><circle cx="400" cy="206" r="9" fill="${PAP}" stroke="${INK}"/>
+    <path d="M408 222 432 186" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><ellipse cx="434" cy="182" rx="4" ry="6" fill="${PAP}" stroke="${INK}"/>
+    <path d="M392 226 378 238" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><path d="M366 232h16v18h-16Z" fill="${PAP}" stroke="${INK}"/>`;
+  // Menge mit erhobenen Armen
+  const people=[];
+  for(let row=0;row<5;row++){
+    const y=262+row*21, rh=6+row*1.6, step=rh*2.9;
+    for(let x=24+(row%2)*step/2; x<790; x+=step){ if(Math.abs(x-400)<70 && row<2) continue; people.push([x+(R()-.5)*4,y,rh]); }
+  }
+  people.forEach(([x,y,rh])=>{
+    const dir = x<400 ? 1 : -1, lift = 0.6 + R()*0.6;
+    if(R()<0.6){ const ax = x + dir*rh*(1.2+R()), ay = y - rh*(3.0+lift*1.3);
+      s += `<path d="M${x+dir*rh*.6} ${y+rh*.6}L${ax} ${ay}" stroke="${INK}" stroke-width="${rh*.5}" stroke-linecap="round"/><path d="M${x+dir*rh*.6} ${y+rh*.6}L${ax} ${ay}" stroke="${PAP}" stroke-width="${rh*.26}" stroke-linecap="round"/>
+        <ellipse cx="${ax}" cy="${ay-rh*.35}" rx="${rh*.32}" ry="${rh*.5}" fill="${PAP}" stroke="${INK}" stroke-width=".6"/>`; }
+    s += `<path d="M${x-rh*1.4} ${y+rh*2.4}q0-${rh*2} ${rh*1.4}-${rh*2}t${rh*1.4} ${rh*2}Z" fill="url(#hxd)" stroke="${INK}" stroke-width=".5"/>
+      <circle cx="${x}" cy="${y}" r="${rh*.78}" fill="${PAP}" stroke="${INK}" stroke-width=".8"/>`;
+  });
+  return frameSVG(s, '0 0 800 360', 'Die Halle des Ballhauses: Viele Abgeordnete heben die Hand zum Schwur');
+}
+
+// Raum 4: Ständekarikatur von 1789
+function illus4(){
+  let s = '';
+  // Himmel & Landschaft
+  s += `<path d="M12 12H788V250H12Z" fill="url(#hh2)" opacity=".45"/>`;
+  s += `<path d="M12 250Q120 236 220 246T430 240 640 246 788 238V262H12Z" fill="url(#h1)" opacity=".8"/>`;
+  s += `<path d="M560 240v-40l12-14 12 14v40ZM566 186l6-24 6 24" fill="url(#hx)" stroke="${INK}"/><path d="M600 240v-22h40v22ZM596 218l24-14 24 14Z" fill="url(#h1)" stroke="${INK}"/>`;
+  s += `<path d="M680 244c-8-30 10-50 24-54 18 2 30 22 20 54Z" fill="url(#hxd)" stroke="${INK}"/><path d="M702 244v14" stroke="${INK}" stroke-width="3"/>`;
+  // Feld mit Furchen
+  s += `<path d="M12 262H788V348H12Z" fill="${PAP}"/>`;
+  for(let i=0;i<10;i++){ const y=268+i*i*0.9+i*3; s+=`<path d="M12 ${y}Q400 ${y-4} 788 ${y}" stroke="${INK}" stroke-width="${.5+i*.12}" fill="none"/>`; }
+  // Bauer: gebückt, mit Hacke
+  s += `<g>
+    <path d="M322 258 300 350 314 352 338 262Z" fill="url(#hv)" stroke="${INK}" stroke-width="1.3"/>
+    <path d="M340 262 356 350H370L352 258Z" fill="url(#h1)" stroke="${INK}" stroke-width="1.3"/>
+    <ellipse cx="304" cy="353" rx="15" ry="6" fill="url(#hxd)" stroke="${INK}"/><ellipse cx="368" cy="353" rx="15" ry="6" fill="url(#hxd)" stroke="${INK}"/>
+    <path d="M316 248Q340 240 358 254L354 288Q336 294 316 284Z" fill="url(#h1)" stroke="${INK}" stroke-width="1.2"/>
+    <path d="M236 196Q268 172 316 194 346 210 360 252 342 268 318 260 290 238 248 232 228 224 236 196Z" fill="url(#hx)" stroke="${INK}" stroke-width="1.5"/>
+    <path d="M250 210Q290 196 330 226" stroke="${INK}" stroke-width=".8" fill="none"/>
+    <circle cx="224" cy="220" r="14" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><circle cx="217" cy="219" r="1.4" fill="${INK}"/><path d="M214 228q5 3 10 1" stroke="${INK}" fill="none"/>
+    <path d="M222 234q-6 8-2 14" stroke="${INK}" fill="none"/>
+    <path d="M212 206q0-20 18-20 14 2 14 16Z" fill="url(#h2)" stroke="${INK}" stroke-width="1.2"/><ellipse cx="226" cy="206" rx="27" ry="6" transform="rotate(-18 226 206)" fill="${PAP}" stroke="${INK}" stroke-width="1.2"/>
+    <path d="M252 214 208 260" stroke="${INK}" stroke-width="11" stroke-linecap="round"/><path d="M252 214 208 260" stroke="${PAP}" stroke-width="6.5" stroke-linecap="round"/>
+    <path d="M198 226 176 356" stroke="${INK}" stroke-width="4.5"/><path d="M158 352l32 2-2 8-32-2Z" fill="${INK}"/>
+    <circle cx="204" cy="262" r="6.5" fill="${PAP}" stroke="${INK}"/></g>`;
+  // Geistlicher: sitzt vorne auf den Schultern
+  s += `<g>
+    <path d="M238 198Q246 124 272 120 296 122 304 198Q272 206 238 198Z" fill="url(#hxd)" stroke="${INK}" stroke-width="1.5"/>
+    <path d="M246 192 224 236 238 242 260 198Z" fill="url(#hxd)" stroke="${INK}"/><ellipse cx="228" cy="242" rx="10" ry="5" fill="${INK}"/>
+    <path d="M264 128h16l-2 52h-12Z" fill="${PAP}" stroke="${INK}" stroke-width=".8"/><path d="M272 140v26M264 150h16" stroke="${INK}" stroke-width="2.2"/>
+    <circle cx="272" cy="104" r="14" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><circle cx="266" cy="103" r="1.4" fill="${INK}"/><path d="M264 112q6 3 11 0" stroke="${INK}" fill="none"/>
+    <path d="M258 94q14-16 28 0Z" fill="${INK}"/><ellipse cx="272" cy="94" rx="24" ry="5" fill="url(#hxd)" stroke="${INK}"/>
+    <path d="M292 140q14 14 4 32" stroke="${INK}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M292 140q14 14 4 32" stroke="${PAP}" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M288 166h18v16h-18Z" fill="url(#h2)" stroke="${INK}"/></g>`;
+  // Adliger: sitzt hinten, mit Degen und Federhut
+  s += `<g>
+    <path d="M372 196 430 288" stroke="${INK}" stroke-width="3.2"/><path d="M364 194l14 6M370 188l-2 14" stroke="${INK}" stroke-width="3"/><circle cx="370" cy="196" r="3" fill="${INK}"/>
+    <path d="M308 214Q312 132 340 126 368 128 380 220 344 228 308 214Z" fill="url(#h1)" stroke="${INK}" stroke-width="1.5"/>
+    <path d="M334 134 336 214M346 134l-2 80" stroke="${INK}" stroke-width=".8"/><path d="M332 136q8 8 16 0" stroke="${INK}" fill="none"/>
+    <path d="M360 214 382 258 396 254 374 212Z" fill="url(#hv)" stroke="${INK}"/><path d="M384 256l4 28h10l-4-30Z" fill="${PAP}" stroke="${INK}"/><path d="M384 284h20v7h-22Z" fill="${INK}"/>
+    <circle cx="340" cy="110" r="14" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/><circle cx="346" cy="108" r="1.4" fill="${INK}"/><path d="M342 118q5 2 8-1" stroke="${INK}" fill="none"/>
+    <path d="M326 104q-4 16 0 24M354 104q4 16 0 24" stroke="${INK}" stroke-width="5" fill="none"/>
+    <path d="M316 102 328 84q12-6 26 0l12 18q-24-8-50 0Z" fill="url(#hxd)" stroke="${INK}" stroke-width="1.2"/>
+    <path d="M340 84c10-22 30-28 46-24-14 4-26 14-32 26" fill="${PAP}" stroke="${INK}"/><path d="M346 82c10-12 20-16 34-18M350 82c8-8 16-12 26-12" stroke="${INK}" stroke-width=".6" fill="none"/>
+    <path d="M312 150q-16 20-4 40" stroke="${INK}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M312 150q-16 20-4 40" stroke="${PAP}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+  // Tiere fressen die Saat
+  const rabbit = (x,y,sc,flip) => `<g transform="translate(${x} ${y}) scale(${flip?-sc:sc} ${sc})"><path d="M0 0q-4-18 14-20 16-2 22 10l8 0q4 4 0 8H4Z" fill="url(#hx)" stroke="${INK}" stroke-width="1"/>
+      <path d="M34-12l-2-20q4-2 6 0l2 20M38-12l4-18q4 0 5 2l-4 18" fill="${PAP}" stroke="${INK}"/><circle cx="42" cy="-6" r="1.3" fill="${INK}"/><circle cx="-2" cy="-8" r="5" fill="${PAP}" stroke="${INK}"/></g>`;
+  const bird = (x,y,sc,flip) => `<g transform="translate(${x} ${y}) scale(${flip?-sc:sc} ${sc})"><path d="M0 0q8-14 24-10 6 2 10 10l8 4-8 0q-4 6-14 6Q4 10 0 0Z" fill="url(#hxd)" stroke="${INK}"/><path d="M-10-4 4 2" stroke="${INK}" stroke-width="2"/><path d="M18 10v8M24 10v8" stroke="${INK}"/><circle cx="30" cy="0" r="1.2" fill="${PAP}"/></g>`;
+  s += rabbit(470,326,1.1,false) + rabbit(612,338,1,true) + bird(540,322,1,true) + bird(690,320,.9,false) + bird(430,300,.7,true);
+  const R=rng(5); for(let i=0;i<70;i++){ s+=`<circle cx="${420+R()*340}" cy="${306+R()*40}" r="${.8+R()*1.1}" fill="${INK}"/>`; }
+  // Schrift wie auf der Karikatur
+  s += `<text x="400" y="40" text-anchor="middle" font-family="'Apple Chancery','Segoe Script',Georgia,serif" font-style="italic" font-size="17" fill="${INK}">« A faut espérer q'eu s'jeu là finira bentôt »</text>`;
+  // Markierungen
+  const mk = (n,x,y) => `<g class="marker" data-target="m${n}" tabindex="-1"><circle cx="${x}" cy="${y}" r="17" fill="url(#waxg)" stroke="#f3e7c8" stroke-width="2.5"/><text x="${x}" y="${y+6.5}" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#f6dfb0">${n}</text></g>`;
+  const marks = mk(1,262,282) + mk(2,226,140) + mk(3,404,126) + mk(4,560,288);
+  return `<svg viewBox="0 0 800 360" role="img" aria-label="Karikatur: Ein gebückter Bauer mit Hacke trägt einen Geistlichen und einen Adligen mit Degen auf dem Rücken. Im Vordergrund fressen Hasen und Vögel die Saat.">
+    <rect width="800" height="360" fill="${PAP}"/><g filter="url(#rough)">${s}</g>
+    <rect x="6" y="6" width="788" height="348" fill="none" stroke="${INK}" stroke-width="2.2"/><rect x="12" y="12" width="776" height="336" fill="none" stroke="${INK}" stroke-width=".7"/>${marks}</svg>`;
+}
+
+// Raum 5: die Bastille im Morgengrauen
+function illus5(){
+  let s = '';
+  // Himmel mit Morgengrauen: Linien oben dicht, am Horizont hell
+  s += `<rect x="12" y="12" width="776" height="300" fill="url(#hh)" mask="url(#skymask)"/>`;
+  s += `<g stroke="${INK}" stroke-width=".7">`; for(let i=0;i<26;i++){const a=Math.PI+ (i+.5)/26*Math.PI; s+=`<line x1="${400+52*Math.cos(a)}" y1="${124+52*Math.sin(a)}" x2="${400+130*Math.cos(a)}" y2="${124+130*Math.sin(a)}" opacity=".55"/>`;} s+=`</g>`;
+  s += `<path d="M352 124a48 48 0 0 1 96 0Z" fill="${PAP}" stroke="${INK}" stroke-width="1.2"/>`;
+  // Rauch
+  s += `<path d="M560 90c-20-30 10-50 30-40 10-24 50-24 56 4 26-6 40 20 26 36" fill="url(#h1)" stroke="${INK}" stroke-width=".8" opacity=".7"/>`;
+  // Mauern und Türme
+  const towers=[110,215,320,480,585,690];
+  s += `<path d="M110 130H690V312H110Z" fill="url(#hv2)" stroke="${INK}" stroke-width="1.2"/>`;
+  for(let x=110;x<690;x+=18) s+=`<rect x="${x}" y="122" width="10" height="9" fill="${PAP}" stroke="${INK}" stroke-width=".8"/>`;
+  towers.forEach((x,i)=>{
+    const w=66, top=86+(i%2)*8;
+    s += `<rect x="${x-w/2}" y="${top}" width="${w}" height="${312-top}" fill="${PAP}" stroke="${INK}" stroke-width="1.4"/>
+      <rect x="${x+w*.12}" y="${top}" width="${w*.38}" height="${312-top}" fill="url(#hv)"/><rect x="${x+w*.32}" y="${top}" width="${w*.18}" height="${312-top}" fill="url(#hxd)"/>
+      <rect x="${x-w/2-4}" y="${top-6}" width="${w+8}" height="10" fill="url(#h2)" stroke="${INK}"/>`;
+    for(let k=0;k<5;k++) s+=`<rect x="${x-w/2-4+k*15.5}" y="${top-17}" width="9" height="11" fill="${PAP}" stroke="${INK}" stroke-width=".9"/>`;
+    for(let k=0;k<3;k++) s+=`<rect x="${x-6}" y="${top+30+k*58}" width="7" height="14" fill="${INK}"/>`;
+  });
+  // Tor mit Zugbrücke
+  s += `<path d="M370 312v-60q30-26 60 0v60Z" fill="url(#hxd)" stroke="${INK}" stroke-width="1.4"/><path d="M372 312 340 340h120l-32-28" fill="url(#h1)" stroke="${INK}"/><path d="M372 254 352 200M428 254 448 200" stroke="${INK}" stroke-width="1.2"/>`;
+  // Graben & Boden
+  s += `<path d="M12 312H788V348H12Z" fill="url(#hh)"/><path d="M12 312H788" stroke="${INK}" stroke-width="1.4"/>`;
+  // Menge mit Piken
+  const R=rng(41);
+  for(let i=0;i<70;i++){ const x=20+i*11+(R()-.5)*6, y=336+R()*10, rh=4.5+R()*2.5;
+    if(R()<0.35) s+=`<path d="M${x} ${y} ${x+(R()-.5)*16} ${y-40-R()*24}" stroke="${INK}" stroke-width="1.3"/>`;
+    s+=`<path d="M${x-rh*1.5} ${y+rh*2.4}q0-${rh*2} ${rh*1.5}-${rh*2}t${rh*1.5} ${rh*2}Z" fill="url(#hxd)"/><circle cx="${x}" cy="${y}" r="${rh*.75}" fill="${INK}"/>`; }
+  // Fahne
+  s += `<path d="M150 348V250" stroke="${INK}" stroke-width="2"/><path d="M150 250q24-8 48 0t40 2v26q-20 6-40-2t-48 0Z" fill="${PAP}" stroke="${INK}"/><path d="M166 248v28M182 246v28" stroke="${INK}" stroke-width=".5"/>`;
+  return frameSVG(s, '0 0 800 360', 'Die Bastille mit ihren Türmen im Morgengrauen, davor eine Menschenmenge mit Piken');
+}
+
+// Abschluss: Kokarde und Jakobinermütze
+function illusEnd(){ return `<div class="title-orn">${ORN.lily(54,'#3b2a1a')}${ORN.cockade(96)}${ORN.cap(70)}</div>`; }
+
+// Echte Bilder aus dem Ordner bilder/ (falls vorhanden)
+function tryPhoto(el, src, caption, onDone){
+  const img = new Image();
+  img.onload = () => { el.innerHTML = `<div class="frame"><img src="${src}" alt="${esc(caption)}"></div><figcaption>${esc(caption)}</figcaption>`; onDone && onDone(); };
+  img.onerror = () => {};
+  img.src = src;
+}
+
+/* =========================================================
+   Inhalte der Räume
+   ========================================================= */
+const ROMAN = ['0','I','II','III','IV','V'];
+const ROOMS = [
+ { title:'Übung im Archiv', kicker:'Vorzimmer · Übung', illus: illus0, caption:'Ein Schreibpult im Archiv von Versailles',
+   intro:`Bevor es ernst wird, übt ihr kurz. So lernt ihr, wie das Dossier funktioniert. Diese Übung zählt noch nicht zur Zeit.`,
+   tasks:[
+    { id:'t0a', type:'assign', layout:'plain', title:'Zuordnen',
+      prompt:'Ordnet jeden Zettel dem passenden Feld zu.',
+      howto:'So geht es: 1. Tippt einen Zettel an. 2. Tippt dann auf das passende Feld. Falsch abgelegt? Tippt den Zettel noch einmal an, dann liegt er wieder auf dem Tisch.',
+      items:[{id:'p2',t:'1789'},{id:'p3',t:'König Ludwig XVI.'},{id:'p1',t:'Paris'}],
+      targets:[{id:'ort',t:'ein Ort'},{id:'jahr',t:'eine Jahreszahl'},{id:'person',t:'eine Person'}], need:3,
+      hints:['Paris ist eine Stadt, also ein Ort.','1789 ist das Jahr. Ludwig XVI. ist der König.'] },
+    { id:'t0b', type:'lock', title:'Zahlenschloss', wheels:1,
+      prompt:'Schaut oben in die Leiste: Wie viele rote Siegel müsst ihr im ganzen Spiel brechen? Stellt die Zahl ein und tippt auf „Öffnen“.',
+      howto:'So geht es: Mit ▲ und ▼ dreht ihr die Ziffer. Probiert auch einmal den Knopf „Hinweis“ aus.',
+      hints:['Zählt die roten Siegel oben in der Leiste.','Es sind fünf Siegel. Stellt die 5 ein.'] }
+   ],
+   doneTitle:'Übung geschafft!', doneText:'Ihr kennt jetzt alle Werkzeuge. Ab jetzt läuft die Taschenuhr. Viel Glück!'
+ },
+ { title:'Die Ständegesellschaft', kicker:'Raum I', illus: illus1, caption:'Die drei Stände: Geistlichkeit, Adel und Dritter Stand',
+   intro:`Im Archiv steht ein alter Sekretär mit drei Fächern. Darauf liegen lose Zettel. Ein Beamter hat sie durcheinandergebracht. Ordnet jeden Zettel dem richtigen Stand zu.`,
+   tasks:[
+    { id:'t1', type:'assign', layout:'secretary', title:'Wer gehört wohin?',
+      prompt:'Legt alle 9 Zettel in das richtige Fach.',
+      howto:'Tippt einen Zettel an und dann ein Fach. Mit „Prüfen“ seht ihr, ob alles stimmt.',
+      items:[{id:'s6',t:'zahlt fast alle Steuern'},{id:'s1',t:'Bischöfe und Äbte gehören dazu'},{id:'s3',t:'besitzt das Jagdrecht'},
+        {id:'s8',t:'macht rund 98 % der Bevölkerung aus'},{id:'s4',t:'hat die hohen Ämter in Armee und Verwaltung'},
+        {id:'s2',t:'erhält den Zehnten – eine Abgabe von der Ernte'},{id:'s9',t:'Kaufleute und Anwälte gehören dazu'},
+        {id:'s7',t:'muss Frondienste für den Grundherrn leisten'},{id:'s5',t:'zahlt keine direkten Steuern, weil er dem König im Krieg dient'}],
+      targets:[{id:'k',t:'1. Stand',sub:'Geistlichkeit',icon:'cross'},{id:'a',t:'2. Stand',sub:'Adel',icon:'lys'},{id:'b',t:'3. Stand',sub:'Bürger, Bauern, Handwerker',icon:'hoe'}], need:9,
+      hints:['Oben stehen wenige Menschen mit vielen Rechten. Unten stehen sehr viele Menschen. Sie arbeiten und zahlen.','Der Zehnte ist eine Abgabe an die Kirche. Jagdrecht und Degen gehören zum Adel. Zum 3. Stand gehören fast alle Menschen: 2 Zettel liegen beim Klerus, 3 beim Adel, 4 beim 3. Stand.'],
+      note:'Etwa 2 % der Menschen gehörten zum 1. und 2. Stand. Sie hatten viele Vorrechte (Privilegien). Die übrigen 98 % trugen fast alle Lasten.' }
+   ],
+   bs:'QUI=', doneTitle:'Das erste Siegel ist gebrochen!'
+ },
+ { title:'Die Krise und die Generalstände', kicker:'Raum II', illus: illus2, caption:'Versailles, 5. Mai 1789: Eröffnung der Generalstände',
+   intro:`In einer Schublade findet ihr einen königlichen Erlass. Doch Mäuse haben Wörter herausgefressen. Setzt die fehlenden Wörter wieder ein.`,
+   tasks:[
+    { id:'t2a', type:'assign', layout:'decree', title:'Der Erlass des Königs',
+      prompt:'Füllt die 6 Lücken. Einige Wörter bleiben übrig.',
+      howto:'Tippt ein Wort an und dann eine Lücke.',
+      text:'Unser Königreich ist hoch {g1}. Die Kassen sind leer. Darum ruft König {g2} die {g3} ein. Diese Versammlung der drei Stände hat seit dem Jahr {g4} nicht mehr getagt. Sie wird am {g5} in {g6} eröffnet.',
+      items:[{id:'w8',t:'5. Mai 1789'},{id:'w2',t:'reich'},{id:'w5',t:'Generalstände'},{id:'w11',t:'Paris'},{id:'w3',t:'Ludwig XVI.'},
+        {id:'w7',t:'1614'},{id:'w9',t:'14. Juli 1789'},{id:'w1',t:'verschuldet'},{id:'w6',t:'Nationalversammlung'},{id:'w4',t:'Ludwig XIV.'},{id:'w10',t:'Versailles'}],
+      targets:[{id:'g1'},{id:'g2'},{id:'g3'},{id:'g4'},{id:'g5'},{id:'g6'}], need:6,
+      hints:['Leere Kassen bedeuten: Das Land hat viele Schulden. Der König von 1789 ist Ludwig der Sechzehnte.','Die Versammlung hieß „Generalstände“. Sie tagte zuletzt 1614. Eröffnung: 5. Mai 1789 im Schloss Versailles.'],
+      note:'Frankreich hatte riesige Schulden – auch durch Kriege und den teuren Hof. Der König brauchte neue Steuern. Dafür rief er die Generalstände ein.' },
+    { id:'t2b', type:'lock', title:'Abstimmung nach Ständen', wheels:1, simplified:true,
+      prompt:'Bei der Abstimmung nach Ständen hat jeder Stand genau eine Stimme. Wie viele Stimmen hat der 3. Stand?',
+      hints:['Es gibt drei Stände. Jeder Stand stimmt als Gruppe ab.','Jeder Stand hat eine Stimme. Der 3. Stand hat also 1 Stimme – von insgesamt 3.'] },
+    { id:'t2c', type:'lock', title:'Abstimmung nach Köpfen', wheels:3, simplified:true,
+      prompt:'Bei der Abstimmung nach Köpfen hat jeder Abgeordnete eine Stimme. Wie viele Stimmen hat der 3. Stand?',
+      hints:['Zählt die Abgeordneten des 3. Standes.','Der 3. Stand hat 600 Abgeordnete. Also 600 Stimmen – von insgesamt 1200.'],
+      note:'Nach Ständen steht es oft 2 : 1. Klerus und Adel stimmen gemeinsam – der 3. Stand verliert immer. Nach Köpfen steht es 600 : 600. Wenn nur einige Geistliche oder Adlige mitmachen, gewinnt der 3. Stand. Deshalb forderte er: Abstimmung nach Köpfen! Der König und die oberen Stände lehnten ab.' }
+   ],
+   bs:'VFM=', doneTitle:'Das zweite Siegel ist gebrochen!'
+ },
+ { title:'Der Ballhausschwur', kicker:'Raum III', illus: illus3, caption:'Versailles, 20. Juni 1789: der Schwur im Ballhaus', photo:'bilder/ballhausschwur.jpg', photoCaption:'Der Ballhausschwur am 20. Juni 1789 (Gemälde nach Jacques-Louis David)',
+   intro:`Ihr findet eine Chronik-Rolle. Aber die Ereignisse sind durcheinandergeraten. Bringt sie in die richtige Reihenfolge.`,
+   tasks:[
+    { id:'t3a', type:'assign', layout:'timeline', title:'Die Chronik-Rolle',
+      prompt:'Ordnet die 4 Ereignisse: Was geschah zuerst, was zuletzt?',
+      howto:'Tippt ein Ereignis an und dann einen Platz in der Rolle (I = zuerst).',
+      items:[{id:'e3',t:'Die Abgeordneten schwören im Ballhaus.'},{id:'e1',t:'Die Generalstände werden in Versailles eröffnet.'},
+        {id:'e4',t:'Pariser stürmen die Bastille.'},{id:'e2',t:'Der Dritte Stand erklärt sich zur Nationalversammlung.'}],
+      targets:[{id:'z1',d:'NS4gTWFpIDE3ODk='},{id:'z2',d:'MTcuIEp1bmkgMTc4OQ=='},{id:'z3',d:'MjAuIEp1bmkgMTc4OQ=='},{id:'z4',d:'MTQuIEp1bGkgMTc4OQ=='}], need:4,
+      hints:['Am Anfang steht die Versammlung, die der König einberufen hat. Am Ende steht das Ereignis in Paris.','Zuerst muss sich der 3. Stand zur Nationalversammlung erklären. Erst danach kann diese Versammlung im Ballhaus schwören.'] },
+    { id:'t3b', type:'mc', title:'Der Schwur',
+      prompt:'Am 20. Juni 1789 fanden die Abgeordneten ihren Saal verschlossen. Sie gingen in eine Halle für Ballspiele, das Ballhaus. Was schworen sie dort?',
+      options:[{id:'a',t:'dem König für immer treu zu dienen und alle seine Befehle zu befolgen',fb:'Nein – sie widersetzten sich gerade dem Willen des Königs.'},
+        {id:'b',t:'am nächsten Morgen gemeinsam die Bastille in Paris zu stürmen',fb:'Nein – die Bastille wurde erst drei Wochen später von Pariser Bürgern gestürmt.'},
+        {id:'c',t:'nicht auseinanderzugehen, bis Frankreich eine Verfassung hat'},
+        {id:'d',t:'keine Steuern mehr zu zahlen, bis der König abdankt',fb:'Nein – um Steuern ging es bei diesem Schwur nicht direkt.'}],
+      hints:['Die Abgeordneten wollten, dass Gesetze die Macht des Königs begrenzen.','Ein Grundgesetz für einen Staat heißt Verfassung.'],
+      note:'Der Ballhausschwur war mutig: Die Abgeordneten widersetzten sich dem König. Sie wollten eine Verfassung. Darin sollten Regeln stehen, an die sich auch der König halten muss.' }
+   ],
+   bs:'TEk=', doneTitle:'Das dritte Siegel ist gebrochen!'
+ },
+ { title:'Die Karikatur', kicker:'Raum IV', illus: illus4, caption:'Karikatur von 1789: „Hoffentlich hat das Spiel bald ein Ende“', photo:'bilder/karikatur.jpg', photoCaption:'Karikatur von 1789: „Hoffentlich hat das Spiel bald ein Ende“', photoClass:'photo-karikatur', isTaskImage:true,
+   intro:`Unter einem Stapel Papiere liegt ein Flugblatt. Darauf ist eine Karikatur aus dem Jahr 1789. Untersucht sie wie in der Methodenstunde: <em class="ink">Beschreiben – Deuten – Bewerten</em>.`,
+   tasks:[
+    { id:'t4a', type:'assign', layout:'picture', title:'1. Beschreiben',
+      prompt:'Was ist auf dem Bild zu sehen? Benennt die vier markierten Bildelemente.',
+      howto:'Tippt einen Namen an und dann die passende Nummer – unten in der Liste oder direkt im Bild.',
+      items:[{id:'n3',t:'Adliger'},{id:'n1',t:'Bauer'},{id:'n4',t:'Tiere fressen die Saat'},{id:'n2',t:'Geistlicher'}],
+      targets:[{id:'m1',sub:'gebückt, mit Hacke'},{id:'m2',sub:'im langen Gewand der Kirche'},{id:'m3',sub:'mit Degen und Federhut'},{id:'m4',sub:'im Vordergrund auf dem Feld'}], need:4,
+      hints:['Achtet auf die Kleidung: Wer trägt einen Degen? Wer trägt ein Gewand der Kirche?','Nummer 1 trägt die anderen und hält eine Hacke. Nummer 4 sind Hasen und Vögel.'] },
+    { id:'t4b', type:'assign', layout:'symbols', title:'2. Deuten',
+      prompt:'Was bedeuten die Bildelemente? Ordnet jedem Bildelement die passende Bedeutung zu.',
+      howto:'Tippt eine Bedeutung an und dann das passende Feld.',
+      items:[{id:'d3',t:'Die Bauern dürfen das Wild nicht jagen. Das Jagdrecht hat nur der Adel.'},{id:'d1',t:'Der 3. Stand muss die oberen Stände ernähren und für sie zahlen.'},
+        {id:'d4',t:'Die Kirche lebt von Abgaben der Bauern, zum Beispiel dem Zehnten.'},{id:'d2',t:'Der Adel hat Macht und viele Vorrechte.'}],
+      targets:[{id:'y1',t:'Der Bauer trägt die beiden anderen auf dem Rücken.'},{id:'y2',t:'Der Adlige trägt einen Degen.'},{id:'y3',t:'Hasen und Vögel fressen die Saat.'},{id:'y4',t:'Der Geistliche sitzt bequem oben.'}], need:4,
+      hints:['Der Degen ist eine Waffe. Er zeigt Macht.','Wer darf Hasen jagen? Nur der Adel. Die Bauern müssen zusehen, wie die Tiere ihre Saat fressen.'] },
+    { id:'t4c', type:'mc', title:'3. Bewerten',
+      prompt:'Eine Bewertung braucht ein Urteil und eine Begründung. Welche Bewertung ist gut begründet?',
+      options:[{id:'a',t:'Auf dem Bild sieht man drei Männer und ein paar Tiere auf einem Feld.',fb:'Das ist eine Beschreibung, keine Bewertung.'},
+        {id:'b',t:'Die Karikatur ist gelungen. Sie zeigt deutlich die Ungerechtigkeit: Die große Mehrheit trägt die Lasten, eine kleine Minderheit hat die Vorrechte.'},
+        {id:'c',t:'Die Karikatur ist langweilig.',fb:'Das ist eine Meinung ohne Begründung.'},
+        {id:'d',t:'Die Karikatur ist übertrieben, denn der Adel hat damals die meisten Steuern bezahlt.',fb:'Die Begründung ist falsch: Fast alle Steuern zahlte der 3. Stand.'}],
+      hints:['Eine gute Bewertung sagt: „Ich finde … , weil …“','Sucht die Antwort mit einem Urteil UND einer richtigen Begründung.'],
+      note:'Der Zeichner kritisiert die Ständegesellschaft. Sein Titel sagt: „Hoffentlich hat dieses Spiel bald ein Ende.“ Er hofft auf eine gerechtere Ordnung.' }
+   ],
+   bs:'RUw=', doneTitle:'Das vierte Siegel ist gebrochen!'
+ },
+ { title:'Die Bastille', kicker:'Raum V', illus: illus5, caption:'Paris, 14. Juli 1789, im Morgengrauen', photo:'bilder/bastille.jpg', photoCaption:'Der Sturm auf die Bastille am 14. Juli 1789 (zeitgenössisches Gemälde)',
+   intro:`Die Tür des Archivs ist offen! Ihr reitet nach Paris. Es dämmert schon. Tausende Menschen ziehen durch die Straßen zur Bastille, einer alten Festung und einem Gefängnis des Königs.`,
+   tasks:[
+    { id:'t5a', type:'mc', title:'Was suchen die Pariser?',
+      prompt:'Der König hat Soldaten rund um Paris zusammengezogen. Die Menschen haben Angst. Was suchen sie vor allem in der Bastille?',
+      options:[{id:'a',t:'Gold aus der Staatskasse des Königs',fb:'Nein – in der Bastille lag kein Staatsschatz.'},
+        {id:'b',t:'den König, der sich dort versteckt hält',fb:'Nein – der König war in Versailles.'},
+        {id:'c',t:'Schießpulver und Waffen, um sich gegen die Soldaten zu verteidigen'},
+        {id:'d',t:'Hunderte Gefangene, die für die Revolution kämpfen sollen',fb:'Nein – am 14. Juli saßen nur sieben Gefangene in der Bastille.'}],
+      hints:['Die Menschen wollten sich verteidigen können.','Für Gewehre braucht man Pulver. In der Bastille lagerte viel davon.'] },
+    { id:'t5b', type:'mc', title:'Ein Zeichen für ganz Frankreich',
+      prompt:'Die Bastille fällt. Warum wurde dieser Tag so berühmt?',
+      options:[{id:'a',t:'Weil an diesem Tag der König gefangen genommen wurde.',fb:'Nein – der König blieb noch König.'},
+        {id:'b',t:'Weil in der Bastille die Verfassung unterschrieben wurde.',fb:'Nein – die Verfassung kam erst 1791.'},
+        {id:'c',t:'Weil die Bastille das größte Schloss Frankreichs war.',fb:'Nein – die Bastille war eine Festung und ein Gefängnis, kein Schloss.'},
+        {id:'d',t:'Weil die Bastille ein Zeichen für die Macht des Königs war. Ihr Fall zeigte: Das Volk wehrt sich.'}],
+      hints:['Wer ließ Menschen ohne Gerichtsurteil in die Bastille sperren?','Die Bastille stand für die Willkür des Königs. Ihr Fall war ein Signal.'],
+      note:'Der 14. Juli ist bis heute der Nationalfeiertag Frankreichs. Mit diesem Tag beginnt für viele die Französische Revolution.' },
+    { id:'t5c', type:'word', title:'Das Losungswort',
+      prompt:'Am Tor stehen Wachen. Sie lassen nur durch, wer das Losungswort kennt. Setzt eure vier Bausteine zusammen und tragt das Wort mit der Feder ein.',
+      hints:['Das Wort ist der Name des Ortes, an dem ihr gerade steht.','Die richtige Reihenfolge: BA – ST – IL – LE.'] }
+   ],
+   doneTitle:'Das fünfte Siegel ist gebrochen!'
+ }
+];
+const TASKS = {}; ROOMS.forEach((r,ri)=>r.tasks.forEach(t=>{ t.room=ri; TASKS[t.id]=t; }));
+
+/* =========================================================
+   Pergament mit eingerissenen Kanten
+   ========================================================= */
+function tornClip(seed){
+  const r = rng(seed); const pts=[]; const n=26;
+  for(let i=0;i<=n;i++) pts.push(`calc(${(i/n*100).toFixed(2)}% + ${(r()*2).toFixed(1)}px) ${(r()*7).toFixed(1)}px`);
+  for(let i=1;i<=n;i++) pts.push(`calc(100% - ${(r()*7).toFixed(1)}px) calc(${(i/n*100).toFixed(2)}% + 0px)`);
+  for(let i=n-1;i>=0;i--) pts.push(`calc(${(i/n*100).toFixed(2)}% + 0px) calc(100% - ${(r()*7).toFixed(1)}px)`);
+  for(let i=n-1;i>=1;i--) pts.push(`${(r()*7).toFixed(1)}px calc(${(i/n*100).toFixed(2)}% + 0px)`);
+  return `polygon(${pts.join(',')})`;
+}
+function sheet(inner, seed, extraCls=''){
+  return `<div class="sheet-wrap ${extraCls}"><div class="sheet" style="--torn:${tornClip(seed)}">
+    ${ORN.corner.replace('CL','tl')}${ORN.corner.replace('CL','tr')}${ORN.corner.replace('CL','bl')}${ORN.corner.replace('CL','br')}
+    ${inner}</div></div>`;
+}
+
+/* =========================================================
+   Kopfleiste: Uhr, Siegel, Schalter
+   ========================================================= */
+function initTopbar(){
+  let t=''; for(let i=0;i<12;i++){ const a=i/12*Math.PI*2; t+=`<line x1="${30+19*Math.sin(a)}" y1="${40-19*Math.cos(a)}" x2="${30+(i%3?21:22.5)*Math.sin(a)}" y2="${40-(i%3?21:22.5)*Math.cos(a)}" stroke="#3b2a1a" stroke-width="${i%3?0.8:1.6}"/>`; }
+  $('#ticks').innerHTML = t;
+  let sh=''; for(let i=1;i<=5;i++) sh += `<div class="hseal" id="hs${i}">${sealSVG('', ROMAN[i])}<span class="bs"></span></div>`;
+  $('#seals').innerHTML = sh;
+  $('#btn-sound').innerHTML = `<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4Z" fill="#3b2a1a"/><path class="w" d="M16 8q3 4 0 8M18.5 5.5q5 6.5 0 13" stroke="#3b2a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/><path class="x" d="M16 9l6 6M22 9l-6 6" stroke="#8b1e1e" stroke-width="2" stroke-linecap="round"/></svg>`;
+  $('#btn-candle').innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2c3 4 3 6 0 8-3-2-3-4 0-8Z" fill="#8b1e1e"/><rect x="9" y="11" width="6" height="10" fill="#f6ecd2" stroke="#3b2a1a"/><path d="M6 22h12" stroke="#3b2a1a" stroke-width="2"/></svg>`;
+  $('#btn-new').innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5" fill="none" stroke="#3b2a1a" stroke-width="2.2" stroke-linecap="round"/><path d="M18 2v5h-5" fill="none" stroke="#3b2a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  $('#btn-sound').onclick = () => { S.sound=!S.sound; save(); syncToggles(); if(S.sound) SND.bell(); };
+  $('#btn-candle').onclick = () => { S.flicker=!S.flicker; save(); syncToggles(); };
+  $('#btn-new').onclick = askRestart;
+  syncToggles(); updateSeals(false);
+}
+function syncToggles(){
+  $('#btn-sound').setAttribute('aria-pressed', S.sound); $('#btn-sound .x').style.display = S.sound?'none':''; $('#btn-sound .w').style.display = S.sound?'':'none';
+  $('#btn-candle').setAttribute('aria-pressed', S.flicker); document.body.classList.toggle('no-flicker', !S.flicker);
+}
+function updateSeals(){
+  for(let i=1;i<=5;i++){ const el=$('#hs'+i); const done=!!S.roomsDone[i]; el.classList.toggle('broken', done);
+    el.querySelector('.bs').textContent = done ? (ROOMS[i].bs ? dec(ROOMS[i].bs) : '✓') : ''; }
+  $('#seals').setAttribute('aria-label', `Fortschritt: ${Object.keys(S.roomsDone).filter(k=>k>0).length} von 5 Siegeln gebrochen`);
+}
+function elapsed(){ return S.timerOn ? S.elapsed + (Date.now()-S.timerStart)/1000 : S.elapsed; }
+function fmt(sec){ sec=Math.floor(sec); const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
+function tick(){
+  const e = elapsed(); $('#zeit').textContent = fmt(e);
+  $('#hand-s').setAttribute('transform', `rotate(${(Math.floor(e)%60)*6} 30 40)`);
+  $('#hand-m').setAttribute('transform', `rotate(${(e/60%60)*6} 30 40)`);
+}
+function startTimer(){ if(!S.timerOn){ S.timerStart=Date.now(); S.timerOn=true; save(); } }
+function stopTimer(){ if(S.timerOn){ S.elapsed = elapsed(); S.timerOn=false; save(); } }
+
+/* =========================================================
+   Bildschirme
+   ========================================================= */
+const stage = $('#stage');
+function show(html, anim, after){
+  const old = stage.firstElementChild;
+  const put = () => { stage.innerHTML = html; const w = stage.firstElementChild; if(anim && !RM){ w.classList.add(anim); } window.scrollTo(0,0); after && after(); };
+  if(old && anim && !RM){ old.classList.add('turn-out'); SND.page(); setTimeout(put, 480); } else put();
+}
+
+function render(anim){
+  $('#topbar').classList.toggle('hidden', S.phase==='start' || S.phase==='intro');
+  if(S.phase==='start') return renderStart();
+  if(S.phase==='intro') return renderIntro(anim);
+  if(S.phase==='end') return renderEnd(anim);
+  return renderRoom(anim);
+}
+
+function namesText(){ const n=S.names.filter(Boolean); return n.length>1 ? `${n[0]} und ${n[1]}` : (n[0]||''); }
+
+function renderStart(){
+  show(sheet(`
+    <p class="kicker">Versailles · Juillet 1789</p>
+    <div class="title-orn">${ORN.lily(58,'#3b2a1a')}${ORN.cockade(86)}${ORN.quill(64)}</div>
+    <h1>Dossier secret</h1>
+    <p class="subtitle">Die Nacht vor dem Sturm auf die Bastille</p>
+    ${ORN.divider}
+    <p class="center">Ein Exit-Game zum Beginn der Französischen Revolution.<br>Spielt allein oder zu zweit.</p>
+    <form class="names" id="nameform" autocomplete="off">
+      <label>Euer Name<input id="n1" maxlength="24" required placeholder="Name"></label>
+      <label>Zweiter Name <span class="small">(freiwillig)</span><input id="n2" maxlength="24" placeholder="Name"></label>
+      <div class="actions"><button class="btn btn-seal" type="submit">Dossier<br>öffnen</button></div>
+    </form>
+    <p class="center small">Euer Spielstand wird nur auf diesem Gerät gespeichert.</p>`, 11));
+  $('#nameform').onsubmit = e => { e.preventDefault(); const a=$('#n1').value.trim(), b=$('#n2').value.trim();
+    if(!a){ $('#n1').focus(); return; } S.names=[a,b].filter(Boolean); S.phase='intro'; save(); SND.scratch(); render('turn-in'); };
+}
+
+function renderIntro(anim){
+  show(sheet(`
+    <p class="kicker">Ein Brief für euch</p>
+    <h2 class="center">Versiegelt und dringend</h2>
+    ${ORN.divider}
+    <div id="envzone">
+      <button class="envelope" id="env" aria-label="Brief öffnen: auf das Siegel tippen">
+        <span class="back"></span><span class="flapb"></span><span class="flapt"></span>
+        <span class="addr">An ${esc(namesText())}</span>
+        ${sealSVG('wax bigseal', 'R', true)}
+      </button>
+      <p class="center small">Tippt auf das Siegel, um den Brief zu öffnen.</p>
+    </div>`, 23), anim, () => {
+    $('#env').onclick = () => {
+      const env=$('#env'); env.classList.add('open'); env.querySelector('.bigseal').classList.add('broken'); SND.crack();
+      setTimeout(()=>{ $('#envzone').innerHTML = `
+        <div class="letter unfold">
+          <p class="hand">Versailles, in der Nacht vom 13. auf den 14. Juli 1789</p>
+          <p class="hand">Liebe Freunde der Nation,</p>
+          <p>ihr seid junge Abgeordnete des Dritten Standes. Jemand hat euch im Archiv des Schlosses eingeschlossen.</p>
+          <p>Die Tür ist mit <strong>fünf Siegeln</strong> verschlossen. Jedes Siegel bricht nur, wenn ihr ein Geheimnis der letzten Wochen löst.</p>
+          <p>Für die Räume I bis IV bekommt ihr je einen <strong>Baustein</strong>. Zusammen ergeben sie das Losungswort. Damit kommt ihr an den Wachen vorbei – nach Paris. Dort wird es am Morgen ernst.</p>
+          <p>Beeilt euch! Die Uhr läuft, sobald ihr die Übung geschafft habt.</p>
+          <p class="hand sig">Ein Freund der Freiheit</p>
+        </div>
+        <div class="actions"><button class="btn btn-seal wide" id="go">Ins<br>Archiv</button></div>`;
+        $('#go').onclick = () => { S.phase='room'; S.room=0; save(); render('turn-in'); };
+      }, RM?50:900);
+    };
+  });
+}
+
+/* ---------- Räume ---------- */
+function roomDone(ri){ return ROOMS[ri].tasks.every(t=>T(t.id).done); }
+function renderRoom(anim){
+  const ri=S.room, R=ROOMS[ri];
+  document.body.classList.remove('photo-karikatur');
+  let tasksHtml=''; let open=true;
+  R.tasks.forEach((t,i)=>{ tasksHtml += `<section class="task ${open?'':'locked'}" id="task-${t.id}" aria-disabled="${!open}"></section>`; if(!T(t.id).done) open=false; });
+  show(sheet(`
+    <p class="kicker">${R.kicker}</p>
+    <h1>${R.title}</h1>
+    <figure class="plate" id="plate"><div class="frame">${R.illus()}</div><figcaption>${esc(R.caption)}</figcaption></figure>
+    ${ORN.divider}
+    <p class="lead">${R.intro}</p>
+    ${tasksHtml}
+    <div id="reward"></div>`, 100+ri*13), anim, () => {
+    R.tasks.forEach((t,i)=>renderTask(t));
+    if(roomDone(ri)) renderReward(false);
+    if(R.photo) tryPhoto($('#plate'), R.photo, R.photoCaption, ()=>{ if(R.photoClass) document.body.classList.add(R.photoClass); });
+    bindMarkers();
+  });
+}
+function unlockNext(t){
+  const R=ROOMS[t.room]; const i=R.tasks.indexOf(t); const nx=R.tasks[i+1];
+  if(nx){ const el=$('#task-'+nx.id); el.classList.remove('locked'); el.setAttribute('aria-disabled','false'); setTimeout(()=>el.scrollIntoView({behavior:RM?'auto':'smooth', block:'start'}), 600); }
+  else { finishRoom(); }
+}
+
+/* ---------- Aufgabe: Rahmen ---------- */
+function taskShell(t, body){
+  const st=T(t.id); const letter = String.fromCharCode(97+ROOMS[t.room].tasks.indexOf(t));
+  let hint='';
+  if(!st.done){
+    hint = `<div class="hintbar"><button class="btn btn-brass quiet" data-hint="${t.id}">${ORN.hintIcon.replace('<svg','<svg width="24" height="24"')} ${st.hint? (st.hint<t.hints.length?'Noch ein Hinweis':'Hinweise') : 'Hinweis'}</button></div>`;
+    if(st.hint) hint += `<div class="hintnote">${ORN.hintIcon}${t.hints.slice(0,st.hint).map(x=>`<p>${esc(x)}</p>`).join('')}</div>`;
+  }
+  const note = st.done && t.note ? `<div class="done-note"><h3>Gut zu wissen</h3><p>${esc(t.note)}</p></div>` : '';
+  return `<div class="thead"><span class="nr">Aufgabe ${ROOMS[t.room].tasks.length>1?letter:''}</span><h2>${esc(t.title)}</h2></div>
+    ${t.simplified?'<p class="small"><em class="ink">Vereinfachte Rechnung:</em> 1. Stand = 300 Abgeordnete, 2. Stand = 300, 3. Stand = 600 (zusammen 1200).</p>':''}
+    <p><strong>${esc(t.prompt)}</strong></p>${t.howto && !st.done ? `<p class="howto">${esc(t.howto)}</p>`:''}
+    ${body}<p class="fb" id="fb-${t.id}" aria-live="polite"></p>${hint}${note}`;
+}
+function renderTask(t){
+  const el=$('#task-'+t.id); if(!el) return;
+  if(t.type==='assign') el.innerHTML = taskShell(t, assignBody(t));
+  else if(t.type==='mc') el.innerHTML = taskShell(t, mcBody(t));
+  else if(t.type==='lock') el.innerHTML = taskShell(t, lockBody(t));
+  else if(t.type==='word') el.innerHTML = taskShell(t, wordBody(t));
+  if(t.type==='word') bindWord(t);
+}
+
+/* ---------- Aufgabentyp: Zuordnen (antippen, dann Ziel antippen) ---------- */
+let SEL = null; // {tid, item}
+function slipHtml(t, it, extra=''){
+  const st=T(t.id); const locked = st.done || st.pl[it.id] && st.ok && st.ok.includes(it.id);
+  const cls = ['slip', t.layout==='decree'?'word':'', SEL && SEL.tid===t.id && SEL.item===it.id ? 'sel':'', locked?'ok':'', st.wrong.includes(it.id)?'wrong':''].join(' ');
+  return `<button class="${cls}" data-item="${it.id}" data-tid="${t.id}" ${locked?'aria-disabled="true"':''} aria-pressed="${!!(SEL&&SEL.item===it.id&&SEL.tid===t.id)}">${esc(it.t)}</button>`;
+}
+function placedIn(t, tg){ const st=T(t.id); return t.items.filter(it=>st.pl[it.id]===tg); }
+function assignBody(t){
+  const st=T(t.id); st.ok = st.ok || [];
+  const pool = t.items.filter(it=>!st.pl[it.id]).map(it=>slipHtml(t,it)).join('');
+  const poolHtml = st.done ? '' : `<div class="pool" data-pool="${t.id}" aria-label="Zettel auf dem Tisch">${pool}</div>`;
+  let targets='';
+  const tgt = (tg, inner, cls='target', tag='button') => `<${tag} class="${cls} target" role="button" tabindex="0" data-target="${tg.id}" data-tid="${t.id}" aria-label="${esc(tg.aria||tg.t||tg.id)}">${inner}</${tag}>`;
+  if(t.layout==='secretary'){
+    targets = `<div class="secretary">${t.targets.map(tg=>tgt(tg, `<span class="label"><svg viewBox="0 0 100 100" style="color:#3b2a1a"><use href="#${tg.icon}"/></svg><span>${tg.t}<small>${tg.sub}</small></span></span>${placedIn(t,tg.id).map(it=>slipHtml(t,it)).join('')}`, 'fach','div')).join('')}</div>`;
+  } else if(t.layout==='plain'){
+    targets = `<div class="secretary">${t.targets.map(tg=>tgt(tg, `<span class="label"><span>${tg.t}</span></span>${placedIn(t,tg.id).map(it=>slipHtml(t,it)).join('')}`, 'fach','div')).join('')}</div>`;
+  } else if(t.layout==='decree'){
+    let txt = esc(t.text).replace(/\{(g\d)\}/g, (m,g)=>{ const it=placedIn(t,g)[0]; const isOk = it && st.ok.includes(it.id);
+      return `<button class="gap target ${it?'filled':''} ${isOk||st.done?'ok':''} ${it&&st.wrong.includes(it.id)?'wrong':''}" data-target="${g}" data-tid="${t.id}" ${it?`data-item="${it.id}"`:''} aria-label="Lücke${it?': '+esc(it.t):''}">${it?esc(it.t):'&nbsp;'}</button>`; });
+    targets = `<div class="decree"><div class="dhead">DE PAR LE ROY</div>${ORN.lily(46,'#1f3a6b').replace('<svg','<svg style="display:block;margin:6px auto"')}<div class="dtitle">Erlass des Königs</div>
+      <div class="dtext">${txt}</div><p class="dsign hand">Louis</p></div>`;
+  } else if(t.layout==='timeline'){
+    targets = `<div class="chron"><div class="roll"></div><div class="body">${t.targets.map((tg,i)=>{ const it=placedIn(t,tg.id)[0];
+      return `<div class="tslot target" data-target="${tg.id}" data-tid="${t.id}" role="button" tabindex="0" aria-label="Platz ${ROMAN[i+1]}"><span class="num">${ROMAN[i+1]}</span><span class="line">${it?slipHtml(t,it):'<span class="empty">… hier ablegen …</span>'}${st.done?`<span class="date">${esc(dec2(tg.d))}</span>`:''}</span></div>`; }).join('')}</div><div class="roll"></div></div>`;
+  } else if(t.layout==='picture'){
+    targets = `<p class="small mhint">Die Nummern stehen im Bild oben.</p><div class="marklist">${t.targets.map((tg,i)=>{ const it=placedIn(t,tg.id)[0];
+      return `<div class="mslot target" data-target="${tg.id}" data-tid="${t.id}" role="button" tabindex="0" aria-label="Bildelement Nummer ${i+1}"><span class="num">${i+1}</span><span class="inner"><span class="sub">${esc(tg.sub)}</span>${it?slipHtml(t,it):'<span class="empty">Wer oder was ist das?</span>'}</span></div>`; }).join('')}</div>`;
+  } else if(t.layout==='symbols'){
+    targets = t.targets.map(tg=>{ const it=placedIn(t,tg.id)[0];
+      return `<div class="symrow"><div class="sym">${esc(tg.t)}</div><div class="drop target" data-target="${tg.id}" data-tid="${t.id}" role="button" tabindex="0" aria-label="Bedeutung für: ${esc(tg.t)}">${it?slipHtml(t,it):'<span class="empty">Bedeutung hier ablegen</span>'}</div></div>`; }).join('');
+  }
+  const check = st.done ? '' : `<div class="actions"><button class="btn btn-seal" data-check="${t.id}">Prüfen</button></div>`;
+  const wrap = t.layout==='decree' || t.layout==='symbols' ? targets + poolHtml : poolHtml + targets;
+  return `<div class="assign ${SEL&&SEL.tid===t.id?'targets-active':''}" id="as-${t.id}">${wrap}</div>${check}`;
+}
+function place(t, itemId, tg){
+  const st=T(t.id);
+  if(t.layout!=='secretary' && t.layout!=='plain'){ placedIn(t,tg).forEach(o=>{ if(!st.ok.includes(o.id)) delete st.pl[o.id]; }); if(placedIn(t,tg).length) return false; }
+  st.pl[itemId]=tg; st.wrong = st.wrong.filter(x=>x!==itemId); save(); return true;
+}
+function checkAssign(t){
+  const st=T(t.id); const placed=Object.keys(st.pl);
+  const right = placed.filter(i=>ok(`${t.id}|${i}|${st.pl[i]}`));
+  const wrong = placed.filter(i=>!right.includes(i));
+  st.ok = right; st.wrong = wrong; save();
+  const fb = $('#fb-'+t.id);
+  if(right.length>=t.need){ st.wrong=[]; return solved(t); }
+  renderTask(t); const fb2=$('#fb-'+t.id);
+  if(wrong.length){
+    fail(t, wrong.length===1 ? 'Ein Zettel liegt noch falsch. Er ist rot umrandet.' : `${wrong.length} Zettel liegen noch falsch. Sie sind rot umrandet.`);
+    setTimeout(()=>{ wrong.forEach(i=>delete st.pl[i]); st.wrong=[]; save(); renderTask(t); const f=$('#fb-'+t.id); if(f){ f.className='fb bad'; f.textContent='Die falschen Zettel liegen wieder auf dem Tisch. Versucht es noch einmal!'; } }, 1700);
+  } else {
+    fb2.className='fb'; fb2.textContent = `Bisher alles richtig! Es fehlen noch ${t.need-right.length}.`;
+  }
+}
+
+/* ---------- Aufgabentyp: Auswahlfrage ---------- */
+function mcBody(t){
+  const st=T(t.id);
+  return `<div class="options">${t.options.map((o,i)=>{ const struck=st.wrong.includes(o.id), right=st.done && st.answer===o.id;
+    return `<button class="option ${struck?'struck':''} ${right?'right':''}" data-opt="${o.id}" data-tid="${t.id}" ${struck||st.done?'aria-disabled="true"':''}><span class="let">${'ABCD'[i]}</span><span>${esc(o.t)}${struck&&o.fb?`<span class="optfb">${esc(o.fb)}</span>`:''}</span></button>`; }).join('')}</div>`;
+}
+function answerMC(t, oid){
+  const st=T(t.id); if(st.done || st.wrong.includes(oid)) return;
+  if(ok(`${t.id}|${oid}`)){ st.answer=oid; solved(t); }
+  else { st.wrong.push(oid); save(); renderTask(t); fail(t, null); }
+}
+
+/* ---------- Aufgabentyp: Messing-Zahlenschloss ---------- */
+function lockBody(t){
+  const st=T(t.id); if(!st.wh) st.wh = Array(t.wheels).fill(0);
+  const shackle = `<svg class="shackle" viewBox="0 0 120 90" aria-hidden="true"><path d="M22 90V48a38 38 0 0 1 76 0v42" fill="none" stroke="#6e5222" stroke-width="18"/><path d="M22 90V48a38 38 0 0 1 76 0v42" fill="none" stroke="url(#brassg)" stroke-width="13"/></svg>`;
+  return `<div class="lockbox"><div class="lock ${st.done?'open':''}" id="lock-${t.id}">${shackle}<div class="plate-t">Serrure royale</div>
+    <div class="wheels">${st.wh.map((d,i)=>`<div class="wheel"><button data-wheel="${i}" data-dir="1" data-tid="${t.id}" aria-label="Ziffer ${i+1} erhöhen" ${st.done?'disabled':''}>▲</button>
+      <div class="digit" aria-live="polite" aria-label="Ziffer ${i+1}: ${d}">${d}</div>
+      <button data-wheel="${i}" data-dir="-1" data-tid="${t.id}" aria-label="Ziffer ${i+1} verringern" ${st.done?'disabled':''}>▼</button></div>`).join('')}</div></div>
+    ${st.done?'':`<div class="actions"><button class="btn btn-seal" data-lock="${t.id}">Öffnen</button></div>`}</div>`;
+}
+
+/* ---------- Aufgabentyp: Losungswort mit der Feder ---------- */
+function wordBody(t){
+  const st=T(t.id);
+  const tiles = ['TEk=','QUI=','RUw=','VFM='].map(b=>`<span class="tile">${dec(b)}</span>`).join('');
+  return `<p class="center small">Eure Bausteine (noch durcheinander):</p><div class="tiles">${tiles}</div>
+    <div class="quillrow">${ORN.quill(56)}<input class="quillin" id="word-${t.id}" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Losungswort eintragen" ${st.done?`value="${dec('RUxMSVRTQUI=')}" disabled`:''}></div>
+    ${st.done?'':`<div class="actions"><button class="btn btn-seal" data-word="${t.id}">Ans Tor<br>treten</button></div>`}`;
+}
+function bindWord(t){ const i=$('#word-'+t.id); if(i) i.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); checkWord(t); } }); }
+function checkWord(t){
+  const v = ($('#word-'+t.id).value||'').toUpperCase().replace(/[^A-ZÄÖÜ]/g,'');
+  if(!v) return;
+  if(ok(`${t.id}|${v}`)) solved(t); else fail(t, null);
+}
+
+/* ---------- Richtig / falsch ---------- */
+const FAILS = ['Fast! Schaut noch einmal genau hin.','Die Tinte war wohl zu dick. Versucht es noch einmal.','Nicht verzagen – Revolutionäre geben nicht auf!','Noch nicht ganz. Ein Hinweis kann helfen.','Hm, das passt noch nicht. Ihr schafft das!'];
+let failCount=0;
+function fail(t, msg){
+  const el=$('#task-'+t.id); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+  const fb=$('#fb-'+t.id); fb.className='fb bad'; fb.textContent = msg || FAILS[failCount++ % FAILS.length];
+  const btn = el.querySelector('[data-check],[data-lock],[data-word]') || el;
+  const r = btn.getBoundingClientRect(); const d=document.createElement('div'); d.innerHTML=ORN.blot(); const b=d.firstElementChild;
+  b.style.left=(r.left+r.width/2-45+(Math.random()*40-20))+'px'; b.style.top=(r.top+r.height/2-45+(Math.random()*30-15))+'px';
+  document.body.appendChild(b); setTimeout(()=>b.remove(),1500);
+  SND.soft();
+}
+function solved(t){
+  const st=T(t.id); st.done=true; save(); SEL=null; SND.scratch();
+  renderTask(t);
+  if(t.type==='lock'){ const l=$('#lock-'+t.id); if(l){ l.classList.remove('open'); void l.offsetWidth; l.classList.add('open'); } }
+  const fb=$('#fb-'+t.id); fb.className='fb good'; fb.textContent = ['Richtig!','Sehr gut!','Genau so!','Ausgezeichnet!'][Math.floor(Math.random()*4)];
+  unlockNext(t);
+}
+function finishRoom(){
+  const ri=S.room; if(S.roomsDone[ri]) return; S.roomsDone[ri]=true;
+  if(ri===5){ S.finalTime = elapsed(); stopTimer(); }
+  save(); renderReward(true);
+}
+function renderReward(animate){
+  const ri=S.room, R=ROOMS[ri]; const z=$('#reward');
+  const bs = R.bs ? `<p>Euer Baustein für das Losungswort:</p><div class="bausteinbig">${dec(R.bs)}</div>` : '';
+  const txt = ri===0 ? `<p>${R.doneText}</p>` : ri===5 ? `<p>Die Wachen treten zur Seite. Ihr seid in Paris – genau rechtzeitig!</p>` : '';
+  const btn = ri===0 ? 'Das Spiel<br>beginnen' : ri===5 ? 'Zum<br>Abschluss' : 'Weiter<br>blättern';
+  z.innerHTML = `<div class="reward">${ORN.divider}${ri>0?sealSVG('bigseal', ROMAN[ri], true):''}<h2>${R.doneTitle}</h2>
+     <div class="scroll"><div class="roll"></div><div class="sheetin">${txt}${bs}</div><div class="roll"></div></div>
+     <div class="actions"><button class="btn btn-seal wide" id="next">${btn}</button></div></div>`;
+  const seal=z.querySelector('.bigseal');
+  if(animate){ setTimeout(()=>{ seal && seal.classList.add('broken'); SND.crack(); updateSeals(); if(ri>0) setTimeout(SND.bell, 500); }, 450);
+    setTimeout(()=>z.scrollIntoView({behavior:RM?'auto':'smooth', block:'start'}), 100); }
+  else { seal && seal.classList.add('broken'); }
+  $('#next').onclick = () => {
+    if(ri===0){ S.room=1; startTimer(); }
+    else if(ri===5){ S.phase='end'; }
+    else S.room=ri+1;
+    save(); render('turn-in');
+  };
+}
+
+/* ---------- Abschluss-Urkunde ---------- */
+function renderEnd(anim){
+  const t = S.finalTime || elapsed();
+  show(sheet(`
+    <p class="kicker">Paris, le 14 juillet 1789</p>
+    ${illusEnd()}
+    <h1>Geschafft!</h1>
+    ${ORN.divider}
+    <div class="cert">
+      <p class="small" style="letter-spacing:.2em;font-variant:small-caps">Laissez-passer de la Nation</p>
+      <h2>Passierschein der Nation</h2>
+      <p>Hiermit wird bezeugt, dass</p>
+      <div class="names-big">${esc(namesText())}</div>
+      <p>alle fünf Siegel gebrochen und das Losungswort gefunden ${S.names.length>1?'haben':'hat'}:</p>
+      <div class="bausteinbig">${dec('RUxMSVRTQUI=')}</div>
+      <div class="stat"><div><small>Benötigte Zeit</small>${fmt(t)}</div><div><small>Genutzte Hinweise</small>${S.hints}</div></div>
+      ${sealSVG('bigseal', 'V', false).replace('class="bigseal"','class="bigseal" style="width:90px;height:90px"')}
+    </div>
+    <p class="lead" style="margin-top:28px">Am 14. Juli 1789 stürmten Pariser Bürger die Bastille. Für viele ist das der Beginn der Französischen Revolution. Was ihr heute gelernt habt:</p>
+    <ul>
+      <li>Die Gesellschaft war in drei Stände geteilt. Der 3. Stand trug fast alle Lasten.</li>
+      <li>Frankreich war hoch verschuldet. Darum rief der König die Generalstände ein.</li>
+      <li>Der 3. Stand erklärte sich zur Nationalversammlung und schwor im Ballhaus, eine Verfassung zu schaffen.</li>
+      <li>Der Sturm auf die Bastille zeigte: Das Volk wehrt sich gegen die Macht des Königs.</li>
+    </ul>
+    <div class="actions"><button class="btn btn-brass" id="print">Urkunde drucken</button><button class="btn btn-brass" id="again">Neues Spiel</button></div>`, 999), anim, () => { $('#print').onclick=()=>window.print(); $('#again').onclick=askRestart; });
+}
+
+/* ---------- Neues Spiel (mit Sicherheitsabfrage) ---------- */
+function askRestart(){
+  const m=$('#modal');
+  m.innerHTML = sheet(`<h2 id="modal-t">Wirklich neu beginnen?</h2>${ORN.divider}<p>Der ganze Spielstand wird gelöscht: Namen, Siegel, Bausteine und Zeit.</p>
+    <div class="actions"><button class="btn btn-brass" id="m-no">Abbrechen</button><button class="btn btn-seal" id="m-yes">Ja, neu<br>beginnen</button></div>`, 77);
+  m.classList.add('show'); $('#m-no').focus();
+  $('#m-no').onclick = () => m.classList.remove('show');
+  $('#m-yes').onclick = () => { const snd=S.sound, fl=S.flicker; S=freshState(); S.sound=snd; S.flicker=fl; save(); m.classList.remove('show'); SEL=null; updateSeals(); render('turn-in'); };
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#modal').classList.remove('show'); });
+
+/* =========================================================
+   Zentrale Eingabe: Antippen (Pointer/Klick, kein Drag-and-Drop)
+   ========================================================= */
+function bindMarkers(){
+  $$('.marker').forEach(m=>{ m.addEventListener('click', e=>{ e.stopPropagation(); const tg=m.getAttribute('data-target'); const t=TASKS['t4a'];
+    if(SEL && SEL.tid==='t4a' && !T('t4a').done){ if(place(t, SEL.item, tg)){ SEL=null; SND.soft(); } renderTask(t); }
+    else { const slot=$(`.mslot[data-target="${tg}"]`); if(slot){ slot.scrollIntoView({behavior:RM?'auto':'smooth', block:'center'}); } } }); });
+}
+document.addEventListener('click', e=>{
+  const hint = e.target.closest('[data-hint]');
+  if(hint){ const t=TASKS[hint.dataset.hint], st=T(t.id); if(st.hint<t.hints.length){ st.hint++; S.hints++; save(); SND.scratch(); } renderTask(t); return; }
+
+  const opt = e.target.closest('[data-opt]'); if(opt){ answerMC(TASKS[opt.dataset.tid], opt.dataset.opt); return; }
+
+  const wb = e.target.closest('[data-wheel]');
+  if(wb){ const t=TASKS[wb.dataset.tid], st=T(t.id); if(st.done) return; const i=+wb.dataset.wheel; st.wh[i]=(st.wh[i]+(+wb.dataset.dir)+10)%10; save(); SND.soft();
+    const d=wb.parentElement.querySelector('.digit'); d.textContent=st.wh[i]; d.setAttribute('aria-label',`Ziffer ${i+1}: ${st.wh[i]}`); return; }
+  const lk = e.target.closest('[data-lock]');
+  if(lk){ const t=TASKS[lk.dataset.lock]; const code=T(t.id).wh.join(''); if(ok(`${t.id}|${code.replace(/^0+(?=\d)/,'')}`)) solved(t); else fail(t,null); return; }
+  const wd = e.target.closest('[data-word]'); if(wd){ checkWord(TASKS[wd.dataset.word]); return; }
+  const ck = e.target.closest('[data-check]');
+  if(ck){ const t=TASKS[ck.dataset.check]; if(!Object.keys(T(t.id).pl).length){ const fb=$('#fb-'+t.id); fb.className='fb'; fb.textContent='Legt zuerst Zettel ab.'; return; } checkAssign(t); return; }
+
+  // Zettel antippen
+  const slip = e.target.closest('.slip[data-item]');
+  if(slip){ const t=TASKS[slip.dataset.tid], st=T(t.id); const id=slip.dataset.item;
+    if(st.done) return;
+    // Ist schon ein anderer Zettel ausgewählt und liegt dieser hier in einem Fach? Dann zählt das Antippen als Ablegen in dieses Fach.
+    const host = slip.closest('.target[data-target]');
+    if(host && SEL && SEL.tid===t.id && SEL.item!==id){ if(place(t, SEL.item, host.dataset.target)){ SEL=null; SND.soft(); } renderTask(t); return; }
+    if((st.ok||[]).includes(id)) return;
+    if(st.pl[id]){ delete st.pl[id]; save(); SEL={tid:t.id,item:id}; }
+    else SEL = (SEL && SEL.item===id && SEL.tid===t.id) ? null : {tid:t.id,item:id};
+    st.wrong = st.wrong.filter(x=>x!==id);
+    SND.soft(); renderTask(t); return; }
+  // Ziel antippen
+  const tg = e.target.closest('.target[data-target]');
+  if(tg){ const t=TASKS[tg.dataset.tid]; if(T(t.id).done) return;
+    if(SEL && SEL.tid===t.id){ if(place(t, SEL.item, tg.dataset.target)){ SEL=null; SND.soft(); } renderTask(t); }
+    else if(tg.dataset.item){ /* Lücke mit Wort: zurücklegen */ const st=T(t.id); const id=tg.dataset.item; if(!(st.ok||[]).includes(id)){ delete st.pl[id]; save(); SEL={tid:t.id,item:id}; renderTask(t);} }
+    else { const fb=$('#fb-'+t.id); fb.className='fb'; fb.textContent='Tippt zuerst einen Zettel an.'; }
+    return; }
+});
+// Tastatur: Enter/Leertaste auf Feldern, die keine echten Knöpfe sind
+document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.matches && e.target.matches('[role="button"]')){ e.preventDefault(); e.target.click(); } });
+
+/* =========================================================
+   Schreibschrift vorhanden? Sonst lesbare Kursive verwenden.
+   ========================================================= */
+(function(){ try{ const c=document.createElement('canvas').getContext('2d'); const txt='abcdefghijklmnopqrstuvwxyz ABC';
+  c.font='40px monospace'; const w0=c.measureText(txt).width;
+  const has = ['Snell Roundhand','Apple Chancery','Segoe Script','URW Chancery L','Z003'].some(f=>{ c.font=`40px "${f}", monospace`; return c.measureText(txt).width!==w0; });
+  if(!has) document.documentElement.classList.add('no-script'); }catch(e){} })();
+
+/* =========================================================
+   Start
+   ========================================================= */
+initTopbar(); render(); tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

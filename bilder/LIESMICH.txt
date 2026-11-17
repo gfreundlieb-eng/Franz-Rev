@@ -1,0 +1,11 @@
+Optionale Bilder für das Exit-Game
+==================================
+Legt hier Bilder mit genau diesen Dateinamen ab, dann zeigt das Spiel sie
+statt der gezeichneten Grafik (im Sepia-Rahmen mit Bildunterschrift):
+
+  ballhausschwur.jpg   -> Raum III (Titelbild)
+  karikatur.jpg        -> Raum IV  (Karikatur; die Nummern 1-4 entfallen dann,
+                                    stattdessen erscheinen kurze Beschreibungen)
+  bastille.jpg         -> Raum V   (Titelbild)
+
+Fehlt ein Bild, wird automatisch die eingebaute Zeichnung verwendet.
